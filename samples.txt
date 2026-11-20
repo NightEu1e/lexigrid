@@ -1,0 +1,94 @@
+# Population
+to adapt to sth = sich etw. anpassen
+to assimilate = integrieren, eingliedern
+to cooperate = kooperieren, zusammenarbeiten
+cosmopolitan = weltoffen, international, kosmopolitisch
+crowd = Menschenmenge
+custom = Gewohnheit, Brauch, Sitte
+diversity = Vielfalt, Verschiedenheit
+ethnic = ethnisch, Ethnik-
+habit = Gewohnheit
+heterogeneous = heterogen, verschiedenartig
+immigrant = Immigrant/-in, Einwanderer/Einwanderin
+influx = Zustrom
+inhabitant = Einwohner/in, Bewohner/in
+migrant = Migrant/-in
+minority = Minderheit
+population = Bevölkerung, Population
+social status = gesellschaftliches Ansehen
+variety of = Vielzahl (an), Vielfalt (von)
+
+# Urban Development
+to be located = gelegen sein, liegen
+to benefit from = von etwas profitieren
+decline = Rückgang, Abnahme, Niedergang
+to develop = (sich) entwickeln
+growth = Wachstum
+to increase = steigern, erhöhen, zunehmen, wachsen
+industrialisation = Industrialisierung
+infrastructure = Infrastruktur
+setback = Rückschlag
+settler = Siedler/-in
+to spread = (sich) verbreiten
+tie = Beziehung, Bindung
+trade = Handel
+
+# Living and working in a world city
+anonymity = Anonymität
+borough = Bezirk, Stadtteil (AE)
+to come true = wahr werden, in Erfüllung gehen
+commercial = kommerziell, profitorientiert
+community = Gemeinde, Gemeinschaft
+to commute = pendeln
+concrete = Beton
+to consist of = bestehen aus
+downtown = Stadtzentrum, im Stadtzentrum (AE)
+green space = Grünfläche
+job opportunity = Stellenangebot, Arbeitsgelegenheit
+to make it = es schaffen
+neighbourhood = Nachbarschaft
+office space = Bürofläche
+residential = Wohn-
+suburb = Vorort
+transit system = Transportsystem (AE)
+urban = städtisch, Stadt
+to work from home = im Homeoffice arbeiten
+
+# Social issues & other challenges
+affordable = bezahlbar, erschwinglich
+to aggravate = verschlimmern, verschärfen
+climate change = Klimawandel
+crime rate = Kriminalitätsrate, Verbrechensrate
+to deteriorate = sich verschlechtern
+discrimination = Diskriminierung
+disparity = Missverhältnis, Ungleichheit
+gentrification = Aufwertung durch Luxussanierung
+homelessness = Obdachlosigkeit
+housing = Unterkunft, Wohnungsbeschaffung
+inequality = Ungleichheit
+injustice = Ungerechtigkeit
+lack of = Mangel an, Fehlen von
+pollution = Verschmutzung
+poverty = Armut
+scarcity = Mangel, Knappheit
+shelter = Obdach, Schutz, Schutzhütte
+to skyrocket = emporschnellen, sprunghaft ansteigen
+traffic jam = Stau
+wealth = Reichtum, Vermögen
+
+# Visiting a world city
+architecture = Architektur
+attraction = Attraktion, Sehenswürdigkeit
+awe-inspiring = beeindruckend, Ehrfurcht einflößend
+breathtaking = atemberaubend
+contemporary = zeitgenössisch, zeitgemäß
+historic = historisch
+hub = Zentrum, Mittelpunkt
+landmark = Wahrzeichen
+marvellous = fabelhaft, herrlich
+megacity = Millionenstadt
+memorial = Denkmal, Gedenkstätte, Denkschrift
+metropolis = Metropole, Weltstadt
+monument = Monument, Denkmal
+reputation = Ruf
+sight = Sehenswürdigkeit

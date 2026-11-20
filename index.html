@@ -1,838 +1,943 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Lexigrid</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Mono:wght@400;500&family=Inter:wght@400..600&display=swap">
-<link rel="stylesheet" href="style.css">
-<div class="app">
-  <header class="top">
-    <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-        <rect x="1" y="1" width="12" height="12" rx="3" style="fill:var(--good)"/>
-        <rect x="15" y="1" width="12" height="12" rx="3" style="fill:var(--near)"/>
-        <rect x="1" y="15" width="12" height="12" rx="3" style="fill:var(--miss)"/>
-        <rect x="15.75" y="15.75" width="10.5" height="10.5" rx="2.5" style="fill:none;stroke:var(--line-strong);stroke-width:1.5"/>
-      </svg>
-      <h1>Lexigrid</h1>
-    </div>
-    <div class="hdr-meta" id="hdr-meta"></div>
-  </header>
-  <p class="warn" id="store-warn" hidden>This browser is not keeping your progress (private window or blocked site data). Copy a backup from the Words tab before you leave.</p>
+<!doctype html>
+<html>
 
-  <nav class="tabs" aria-label="Sections">
-    <a href="#play" data-tab="play">Play</a>
-    <a href="#words" data-tab="words">Words</a>
-    <a href="#progress" data-tab="progress">Progress</a>
-  </nav>
+<head>
+  <meta charset=utf8>
+  <meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <style>
+    :root {
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
 
-  <main>
-    <section id="view-play" class="stack">
-      <div id="play-root" class="stack"></div>
-    </section>
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
 
-    <section id="view-words" class="stack" hidden>
-      <div class="card">
-        <h2>Your word list</h2>
-        <p class="muted small">One entry per line: <code>word = meaning</code>. A tab, <code>;</code> or <code>|</code> works as the separator too, so you can paste straight from a spreadsheet. Phrases and hyphens are fine. Lines starting with # are ignored. Verbs can keep their “to” (<code>to commute = pendeln</code>); the game leaves it out of the answer.</p>
-        <label class="fld" for="words-input">Words</label>
-        <textarea id="words-input" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
-        <div class="actions">
-          <button class="btn primary" id="save-list" type="button">Save list</button>
-          <input type="file" id="file-in" class="sr" multiple accept=".txt,.csv,.tsv,text/plain,text/csv">
-          <label class="btn" for="file-in">Load from files</label>
-          <span class="muted small" id="list-count"></span>
+    body {
+      margin: 0;
+      padding: 0;
+      font: 14px -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fff;
+      color: #000
+    }
+
+    img {
+      max-width: 100%
+    }
+
+    [hidden]:not([hidden=until-found i]) {
+      display: none !important
+    }
+  </style>
+</head>
+
+<body>
+  <title>Lexigrid</title>
+  <meta name="claude:viewport-fit-sides" content="cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Mono:wght@400;500&family=Inter:wght@400..600&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <rect x="1" y="1" width="12" height="12" rx="3" style="fill:var(--good)" />
+          <rect x="15" y="1" width="12" height="12" rx="3" style="fill:var(--near)" />
+          <rect x="1" y="15" width="12" height="12" rx="3" style="fill:var(--miss)" />
+          <rect x="15.75" y="15.75" width="10.5" height="10.5" rx="2.5"
+            style="fill:none;stroke:var(--line-strong);stroke-width:1.5" />
+        </svg>
+        <h1>Lexigrid</h1>
+      </div>
+      <div class="hdr-meta" id="hdr-meta"></div>
+    </header>
+    <p class="warn" id="store-warn" hidden>This browser is not keeping your progress (private window or blocked site
+      data). Copy a backup from the Words tab before you leave.</p>
+
+    <nav class="tabs" aria-label="Sections">
+      <a href="#play" data-tab="play">Play</a>
+      <a href="#words" data-tab="words">Words</a>
+      <a href="#progress" data-tab="progress">Progress</a>
+    </nav>
+
+    <main>
+      <section id="view-play" class="stack">
+        <div id="play-root" class="stack"></div>
+      </section>
+
+      <section id="view-words" class="stack" hidden>
+        <div class="card">
+          <h2>Your word list</h2>
+          <p class="muted small">One entry per line: <code>word = meaning</code>. A tab, <code>;</code> or
+            <code>|</code> works as the separator too, so you can paste straight from a spreadsheet. Phrases and hyphens
+            are fine. Lines starting with # are ignored. Verbs can keep their “to” (<code>to commute = pendeln</code>);
+            the game leaves it out of the answer.
+          </p>
+          <label class="fld" for="words-input">Words</label>
+          <textarea id="words-input" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          <div class="actions">
+            <button class="btn primary" id="save-list" type="button">Save list</button>
+            <input type="file" id="file-in" class="sr" multiple accept=".txt,.csv,.tsv,text/plain,text/csv">
+            <label class="btn" for="file-in">Load from files</label>
+            <span class="muted small" id="list-count"></span>
+          </div>
+          <div id="list-status" role="status"></div>
         </div>
-        <div id="list-status" role="status"></div>
-      </div>
 
-      <div class="card">
-        <h2>Game settings</h2>
-        <div>
-          <div class="field"><label for="set-size">Words per session<span class="d">Reviews come first, then new words.</span></label>
-            <select id="set-size"><option>5</option><option>10</option><option>15</option><option>20</option><option>30</option></select></div>
-          <div class="field"><label for="set-new">Most new words per session<span class="d">Set to 0 to only review.</span></label>
-            <select id="set-new"><option>0</option><option>3</option><option>5</option><option>10</option><option>20</option></select></div>
-          <div class="field"><label for="set-strict">Accents must match<span class="d">With this on, ä is not a. Off treats them as equal.</span></label>
-            <input type="checkbox" id="set-strict"></div>
-          <div class="field"><label for="set-hideto">Leave “to” out of verbs<span class="d">“to commute” is played as “commute”, and a note under the meaning says it is a verb.</span></label>
-            <input type="checkbox" id="set-hideto"></div>
-          <div class="field"><label for="set-layout">On-screen keyboard</label>
-            <select id="set-layout"><option value="qwertz">QWERTZ</option><option value="qwerty">QWERTY</option></select></div>
+        <div class="card">
+          <h2>Game settings</h2>
+          <div>
+            <div class="field"><label for="set-size">Words per session<span class="d">Reviews come first, then new
+                  words.</span></label>
+              <select id="set-size">
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option>30</option>
+              </select>
+            </div>
+            <div class="field"><label for="set-new">Most new words per session<span class="d">Set to 0 to only
+                  review.</span></label>
+              <select id="set-new">
+                <option>0</option>
+                <option>3</option>
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+              </select>
+            </div>
+            <div class="field"><label for="set-strict">Accents must match<span class="d">With this on, ä is not a. Off
+                  treats them as equal.</span></label>
+              <input type="checkbox" id="set-strict">
+            </div>
+            <div class="field"><label for="set-hideto">Leave “to” out of verbs<span class="d">“to commute” is played as
+                  “commute”, and a note under the meaning says it is a verb.</span></label>
+              <input type="checkbox" id="set-hideto">
+            </div>
+            <div class="field"><label for="set-layout">On-screen keyboard</label>
+              <select id="set-layout">
+                <option value="qwertz">QWERTZ</option>
+                <option value="qwerty">QWERTY</option>
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <h2>Backup and reset</h2>
-        <p class="muted small">Your list and progress live in this browser. Copy a backup to move them to another device or keep them safe.</p>
-        <textarea id="backup-area" style="min-height:90px" placeholder="Paste a backup here to restore it" spellcheck="false"></textarea>
-        <div class="actions">
-          <button class="btn" id="copy-backup" type="button">Copy backup</button>
-          <button class="btn" id="restore-backup" type="button">Restore from pasted backup</button>
+        <div class="card">
+          <h2>Backup and reset</h2>
+          <p class="muted small">Your list and progress live in this browser. Copy a backup to move them to another
+            device or keep them safe.</p>
+          <textarea id="backup-area" style="min-height:90px" placeholder="Paste a backup here to restore it"
+            spellcheck="false"></textarea>
+          <div class="actions">
+            <button class="btn" id="copy-backup" type="button">Copy backup</button>
+            <button class="btn" id="restore-backup" type="button">Restore from pasted backup</button>
+          </div>
+          <div id="backup-status" role="status"></div>
+          <div class="danger-zone" id="reset-zone"></div>
         </div>
-        <div id="backup-status" role="status"></div>
-        <div class="danger-zone" id="reset-zone"></div>
-      </div>
-    </section>
+      </section>
 
-    <section id="view-progress" class="stack" hidden>
-      <div class="card"><h2>Progress</h2><dl class="stats" id="prog-stats"></dl></div>
-      <div class="card">
-        <h2>Where your words are</h2>
-        <div class="stages" id="stage-chart"></div>
-        <p class="muted small">Solve a word in three guesses or fewer, without a hint, and it moves up a box and comes back later. A miss sends it back to Missed.</p>
-      </div>
-      <div class="card">
-        <h2>All words</h2>
-        <div class="filters">
-          <input type="search" id="wf-q" placeholder="Search words or meanings" aria-label="Search words">
-          <select id="wf-show" aria-label="Show">
-            <option value="all">All</option><option value="due">Due now</option><option value="missed">Missed</option>
-            <option value="new">New</option><option value="mastered">Mastered</option>
-          </select>
+      <section id="view-progress" class="stack" hidden>
+        <div class="card">
+          <h2>Progress</h2>
+          <dl class="stats" id="prog-stats"></dl>
         </div>
-        <ul class="wordlist" id="word-ul"></ul>
-      </div>
-      <div class="card"><h2>Recent sessions</h2><ul class="hist" id="hist"></ul></div>
-    </section>
-  </main>
-  <div class="sr" id="sr" aria-live="polite"></div>
-</div>
+        <div class="card">
+          <h2>Where your words are</h2>
+          <div class="stages" id="stage-chart"></div>
+          <p class="muted small">Solve a word in three guesses or fewer, without a hint, and it moves up a box and comes
+            back later. A miss sends it back to Missed.</p>
+        </div>
+        <div class="card">
+          <h2>All words</h2>
+          <div class="filters">
+            <input type="search" id="wf-q" placeholder="Search words or meanings" aria-label="Search words">
+            <select id="wf-show" aria-label="Show">
+              <option value="all">All</option>
+              <option value="due">Due now</option>
+              <option value="missed">Missed</option>
+              <option value="new">New</option>
+              <option value="mastered">Mastered</option>
+            </select>
+          </div>
+          <ul class="wordlist" id="word-ul"></ul>
+        </div>
+        <div class="card">
+          <h2>Recent sessions</h2>
+          <ul class="hist" id="hist"></ul>
+        </div>
+      </section>
+    </main>
+    <div class="sr" id="sr" aria-live="polite"></div>
+  </div>
 
-<script id="logic">
-// ===== Pure logic: rules, scoring, scheduling. No DOM access. =====
-const LETTER_RE=/[\p{L}\p{N}]/u, MARK_RE=/\p{M}/u;
-const INTERVALS=[0,1,3,7,16,35];             // days until review, by box 0..5
-const GUESS_POINTS=[100,80,65,50,35,20];     // points by guess number
-const HINT_COST=15, MIN_POINTS=10, MAX_ATTEMPTS=6, MIN_LEN=2, MAX_LEN=20;
-const SAMPLE=['perro = dog','gato = cat','casa = house','nube = cloud','playa = beach','cuchara = spoon','ventana = window','tormenta = storm','aprender = to learn','desayuno = breakfast','escalera = staircase','mariposa = butterfly','biblioteca = library','pájaro = bird','montaña = mountain','buenos días = good morning'].join('\n');
+  <script id="logic">
+    // ===== Pure logic: rules, scoring, scheduling. No DOM access. =====
+    const LETTER_RE = /[\p{L}\p{N}]/u, MARK_RE = /\p{M}/u;
+    const INTERVALS = [0, 1, 3, 7, 16, 35];             // days until review, by box 0..5
+    const GUESS_POINTS = [100, 80, 65, 50, 35, 20];     // points by guess number
+    const HINT_COST = 15, MIN_POINTS = 10, MAX_ATTEMPTS = 6, MIN_LEN = 2, MAX_LEN = 20;
+    let SAMPLE = ['perro = dog', 'gato = cat', 'casa = house', 'nube = cloud', 'playa = beach', 'cuchara = spoon', 'ventana = window', 'tormenta = storm', 'aprender = to learn', 'desayuno = breakfast', 'escalera = staircase', 'mariposa = butterfly', 'biblioteca = library', 'pájaro = bird', 'montaña = mountain', 'buenos días = good morning'].join('\n');
 
-const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function fold(s){return s.normalize('NFD').replace(/\p{M}/gu,'').normalize('NFC');}
-function normLetter(ch,strict){const l=ch.toLowerCase();return strict?l:fold(l);}
+    async function loadSamples() {
+      const response = await fetch('./samples.txt');
 
-const TO_RE=/^to\s+(?=\S)/i;
-function coreTerm(term,hideTo){return hideTo&&TO_RE.test(term)?term.replace(TO_RE,''):term;}
-function tokenize(term){
-  const slots=[];let n=0;
-  for(const ch of term.normalize('NFC')){
-    const last=slots[slots.length-1];
-    if(MARK_RE.test(ch)&&last&&last.type==='l'){last.ch+=ch;continue;}
-    if(LETTER_RE.test(ch)){slots.push({type:'l',ch});n++;}
-    else if(/\s/.test(ch)){slots.push({type:'s',ch:' '});}
-    else{slots.push({type:'s',ch});}
-  }
-  return {slots,n};
-}
-
-function evaluate(g,t){
-  const n=t.length,marks=Array(n).fill('absent'),left={};
-  for(let i=0;i<n;i++){if(g[i]===t[i])marks[i]='correct';else left[t[i]]=(left[t[i]]||0)+1;}
-  for(let i=0;i<n;i++){if(marks[i]==='correct')continue;if(left[g[i]]>0){marks[i]='present';left[g[i]]--;}}
-  return marks;
-}
-
-function cleanCell(s){return s.trim().replace(/^"(.*)"$/,'$1').replace(/\s+/g,' ').trim().normalize('NFC');}
-function splitLine(line){
-  const seps=[/=/,/\t/,/;/,/\|/,/\s[-–—]\s/];
-  for(const re of seps){const m=re.exec(line);if(m)return [line.slice(0,m.index),line.slice(m.index+m[0].length)];}
-  const c=line.indexOf(',');
-  if(c>0)return [line.slice(0,c),line.slice(c+1)];
-  return [line,''];
-}
-function parseList(text){
-  const entries=[],skipped=[],seen=new Set();
-  String(text).split(/\r?\n/).forEach((raw,i)=>{
-    const line=raw.trim();
-    if(!line||line.startsWith('#'))return;
-    const [t,h]=splitLine(line);
-    const term=cleanCell(t),hint=cleanCell(h);
-    const n=tokenize(coreTerm(term,true)).n;
-    const bad=(reason)=>skipped.push({line:i+1,text:line,reason});
-    if(!term)return bad('no word');
-    if(!hint)return bad('no meaning after the word');
-    if(n<MIN_LEN)return bad('needs at least '+MIN_LEN+' letters');
-    if(n>MAX_LEN)return bad('longer than '+MAX_LEN+' letters');
-    const key=term.toLowerCase();
-    if(seen.has(key))return bad('duplicate of an earlier line');
-    seen.add(key);
-    entries.push({term,hint});
-  });
-  return {entries,skipped};
-}
-
-function newWord(e){return {id:uid(),term:e.term,hint:e.hint,box:0,due:0,tries:0,wins:0,lapses:0,last:0};}
-function mergeWords(existing,entries){
-  const map=new Map(existing.map(w=>[w.term.toLowerCase(),w]));
-  let added=0,updated=0;const out=[];
-  for(const e of entries){
-    const k=e.term.toLowerCase(),old=map.get(k);
-    if(old){if(old.hint!==e.hint||old.term!==e.term)updated++;out.push({...old,term:e.term,hint:e.hint});map.delete(k);}
-    else{out.push(newWord(e));added++;}
-  }
-  return {words:out,added,updated,removed:map.size};
-}
-
-function startOfDay(ts){const d=new Date(ts);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
-function addDays(ts,n){const d=new Date(ts);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n).getTime();}
-function dayKey(ts){const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function dueLabel(ts,now){
-  if(ts<=now)return 'now';
-  const d=Math.round((startOfDay(ts)-startOfDay(now))/86400000);
-  if(d<=0)return 'later today';
-  if(d===1)return 'tomorrow';
-  if(d<14)return 'in '+d+' days';
-  if(d<60)return 'in '+Math.round(d/7)+' weeks';
-  return 'in '+Math.round(d/30)+' months';
-}
-function effStreak(stats,now){
-  if(!stats.streak)return 0;
-  return (stats.lastDay===dayKey(now)||stats.lastDay===dayKey(addDays(now,-1)))?stats.streak:0;
-}
-function updateDayStreak(stats,now){
-  const today=dayKey(now);
-  if(stats.lastDay===today)return;
-  stats.streak=stats.lastDay===dayKey(addDays(now,-1))?stats.streak+1:1;
-  stats.lastDay=today;
-}
-
-const isDue=(w,now)=>w.tries>0&&w.due<=now;
-function stageOf(w){if(w.tries===0)return 'new';if(w.box===0)return 'missed';return 'box'+w.box;}
-
-function scoreFor(guesses,hints,streak,relearn){
-  const base=GUESS_POINTS[guesses-1];
-  const afterHints=Math.max(MIN_POINTS,base-HINT_COST*hints);
-  const mult=1+0.1*Math.min(streak,10);
-  let pts=afterHints*mult;
-  if(relearn)pts*=0.5;
-  return {base,afterHints,mult,points:Math.round(pts)};
-}
-
-function applyResult(w,r,now){
-  const wasNew=w.tries===0;
-  w.tries++;w.last=now;
-  if(r.solved){
-    w.wins++;
-    const clean=r.hints===0&&r.guesses<=3;
-    w.box=clean?Math.min(5,w.box+1):Math.max(1,w.box);
-    if(r.relearn)w.box=1;
-    w.due=addDays(now,INTERVALS[w.box]);
-  }else{
-    if(!wasNew)w.lapses++;
-    w.box=0;w.due=now;
-  }
-  return w;
-}
-
-function pickSession(words,s,now){
-  const due=words.filter(w=>isDue(w,now)).sort((a,b)=>a.box-b.box||a.due-b.due);
-  const fresh=words.filter(w=>w.tries===0);
-  const dueTake=due.slice(0,s.sessionSize);
-  const newTake=fresh.slice(0,Math.max(0,Math.min(s.newPerSession,s.sessionSize-dueTake.length)));
-  return {words:shuffle([...dueTake,...newTake]),due:dueTake.length,fresh:newTake.length,dueTotal:due.length,freshTotal:fresh.length};
-}
-function practicePick(words,size){
-  const seen=words.filter(w=>w.tries>0).sort((a,b)=>a.box-b.box||a.due-b.due);
-  const rest=words.filter(w=>w.tries===0);
-  return shuffle([...seen,...rest].slice(0,size));
-}
-
-function sanitize(o){
-  const num=(v,d,min,max)=>{v=Number(v);return Number.isFinite(v)?Math.min(max,Math.max(min,v)):d;};
-  const ok=w=>w&&typeof w.term==='string'&&typeof w.hint==='string'&&(()=>{const n=tokenize(coreTerm(w.term,true)).n;return n>=MIN_LEN&&n<=MAX_LEN;})();
-  const words=(Array.isArray(o.words)?o.words:[]).filter(ok).map(w=>({
-    id:String(w.id||uid()),term:w.term,hint:w.hint,box:num(w.box,0,0,5),due:num(w.due,0,0,8.64e15),
-    tries:num(w.tries,0,0,1e6),wins:num(w.wins,0,0,1e6),lapses:num(w.lapses,0,0,1e6),last:num(w.last,0,0,8.64e15)
-  }));
-  const st=o.settings||{};
-  const settings={sessionSize:num(st.sessionSize,10,3,50),newPerSession:num(st.newPerSession,5,0,50),strict:st.strict!==false,hideTo:st.hideTo!==false,layout:st.layout==='qwerty'?'qwerty':'qwertz'};
-  const sx=o.stats||{};
-  const stats={points:num(sx.points,0,0,1e9),best:num(sx.best,0,0,1e9),streak:num(sx.streak,0,0,1e5),lastDay:typeof sx.lastDay==='string'?sx.lastDay:'',
-    sessions:Array.isArray(sx.sessions)?sx.sessions.filter(s=>s&&typeof s==='object').slice(0,30):[]};
-  return {v:1,words,settings,stats,sample:!!o.sample};
-}
-function freshState(){
-  return sanitize({words:parseList(SAMPLE).entries.map(newWord),sample:true});
-}
-</script>
-
-<script>
-(function(){
-'use strict';
-const KEY='lexigrid.v1';
-const $=(s,r=document)=>r.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const disp=ch=>{const u=ch.toUpperCase();return u.length===ch.length?u:ch;};
-const reduceMotion=()=>!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-const plural=(n,w)=>n+' '+w+(n===1?'':'s');
-
-let storageOK=true;
-try{localStorage.setItem('lexigrid.t','1');localStorage.removeItem('lexigrid.t');}catch(e){storageOK=false;}
-
-function load(){
-  try{
-    const raw=localStorage.getItem(KEY);
-    if(raw){const o=JSON.parse(raw);if(o&&Array.isArray(o.words))return sanitize(o);}
-  }catch(e){}
-  return freshState();
-}
-let S=load(),G=null,route='play',pendingReset=false;
-
-function save(){
-  if(!storageOK)return;
-  try{localStorage.setItem(KEY,JSON.stringify(S));}
-  catch(e){storageOK=false;$('#store-warn').hidden=false;}
-}
-
-/* ---------- header and routing ---------- */
-function renderHeader(){
-  const st=effStreak(S.stats,Date.now());
-  $('#hdr-meta').innerHTML='<span><b>'+S.stats.points.toLocaleString()+'</b> pts</span>'+(st>0?'<span><b>'+st+'</b>-day streak</span>':'');
-  $('#store-warn').hidden=storageOK;
-}
-function setRoute(){
-  const h=location.hash.replace('#','');
-  route=['play','words','progress'].includes(h)?h:'play';
-  document.querySelectorAll('.tabs a').forEach(a=>{
-    if(a.dataset.tab===route)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
-  });
-  ['play','words','progress'].forEach(r=>{$('#view-'+r).hidden=r!==route;});
-  if(route==='play'){renderPlay();}
-  if(route==='words'){fillWords();}
-  if(route==='progress'){renderProgress();}
-  renderHeader();
-}
-window.addEventListener('hashchange',setRoute);
-
-/* ---------- play: home ---------- */
-function renderPlay(){
-  if(!G)renderHome();
-  else if(G.done)renderSummary();
-  else renderGame();
-}
-
-function renderHome(){
-  const now=Date.now(),W=S.words;
-  const due=W.filter(w=>isDue(w,now)).length,fresh=W.filter(w=>w.tries===0).length;
-  const pick=pickSession(W,S.settings,now);
-  const n=pick.words.length;
-  let html='';
-  if(S.sample)html+='<div class="note">You are playing with an example Spanish list. Replace it with your own in <a href="#words">Words</a>.</div>';
-  if(!W.length){
-    html+='<div class="card"><h2>No words yet</h2><p class="muted">Add a few lines like <code>perro = dog</code> in <a href="#words">Words</a>, then come back.</p></div>';
-  }else if(n>0){
-    html+='<div class="card"><h2>Ready when you are</h2>'
-      +'<p class="lead">'+due+' due for review · '+fresh+' new in your list</p>'
-      +'<p class="muted small">This session: '+plural(n,'word')+(pick.fresh?', '+pick.fresh+' of them new':'')+'. Words you miss come back before it ends.</p>'
-      +'<div class="actions"><button class="btn primary" type="button" data-action="start">Start session</button>'
-      +'<button class="btn" type="button" data-action="practice">Extra practice</button></div>'
-      +howItWorks()+'</div>';
-  }else{
-    const next=Math.min(...W.filter(w=>w.tries>0).map(w=>w.due));
-    html+='<div class="card"><h2>You are all caught up</h2>'
-      +'<p class="lead">Next review '+esc(dueLabel(next,now))+'</p>'
-      +'<p class="muted small">Extra practice mixes your weakest words and leaves the schedule alone.</p>'
-      +'<div class="actions"><button class="btn primary" type="button" data-action="practice">Extra practice</button></div>'
-      +howItWorks()+'</div>';
-  }
-  $('#play-root').innerHTML=html;
-}
-function howItWorks(){
-  return '<details><summary>How scoring and repetition work</summary><ul>'
-    +'<li>Guess the word from its meaning. Green is the right letter in the right place, yellow is in the word but elsewhere.</li>'
-    +'<li>Points: 100 for the first guess, then 80, 65, 50, 35, 20. A revealed letter costs '+HINT_COST+'.</li>'
-    +'<li>Every word you solve in a row adds 0.1 to a multiplier, up to ×2.</li>'
-    +'<li>Solve in three guesses or fewer without a hint and the word moves up a box. Reviews come after 1, 3, 7, 16 and 35 days.</li>'
-    +'<li>Miss a word and it returns later in the same session for half points, then drops to the first box.</li>'
-    +'</ul></details>';
-}
-
-/* ---------- play: session ---------- */
-function startSession(cram){
-  let words;
-  if(cram)words=practicePick(S.words,S.settings.sessionSize);
-  else words=pickSession(S.words,S.settings,Date.now()).words;
-  if(!words.length)return;
-  const set=new Set();
-  S.words.forEach(w=>tokenize(coreTerm(w.term,S.settings.hideTo)).slots.forEach(s=>{if(s.type==='l')set.add(normLetter(s.ch,S.settings.strict));}));
-  G={queue:words.map(w=>({id:w.id,retry:0,relearn:false})),idx:0,cram,score:0,streak:0,results:[],done:false,cur:null,
-     letters:[...set].sort((a,b)=>a.localeCompare(b))};
-  startWord();
-}
-
-function startWord(){
-  const item=G.queue[G.idx];
-  const word=S.words.find(w=>w.id===item.id);
-  if(!word){
-    if(G.idx+1>=G.queue.length)return showSummary();
-    G.idx++;return startWord();
-  }
-  const stripped=!!S.settings.hideTo&&TO_RE.test(word.term);
-  const tk=tokenize(coreTerm(word.term,S.settings.hideTo)),strict=S.settings.strict;
-  const raw=tk.slots.filter(s=>s.type==='l').map(s=>s.ch.toLowerCase());
-  const tab=item.relearn?'Second chance':word.tries===0?'New word':word.box===0?'Missed before':'Box '+word.box;
-  G.cur={word,item,verbTo:stripped,slots:tk.slots,n:tk.n,raw,norm:raw.map(ch=>normLetter(ch,strict)),strict,tab,
-    rows:[],typed:[],revealed:new Set(),hints:0,status:'playing',busy:false,flipRow:-1,shake:false,keys:{},result:null,info:null,requeued:false};
-  renderPlay();
-}
-
-function renderGame(){
-  const c=G.cur,total=G.queue.length;
-  const mult=(1+0.1*Math.min(G.streak,10)).toFixed(1);
-  const groups=c.slots.filter(s=>s.type==='s'&&s.ch===' ').length+1;
-  $('#play-root').innerHTML=
-    '<div><div class="sessionbar"><span>Word <b>'+(G.idx+1)+'</b> of '+total+(G.cram?' · practice':'')+'</span>'
-    +'<span class="tnum">Score <b>'+G.score+'</b> · streak ×'+mult+'</span></div>'
-    +'<div class="track" aria-hidden="true"><i style="width:'+Math.round(100*G.idx/total)+'%"></i></div></div>'
-    +'<div class="prompt"><span class="tab">'+esc(c.tab)+'</span><p class="meaning">'+esc(c.word.hint)+'</p>'
-    +'<p class="meta">'+plural(c.n,'letter')+(groups>1?' · '+groups+' words':'')+(c.verbTo?' · verb, “to” is not part of the answer':'')+'</p></div>'
-    +'<div id="board" class="board" role="group" aria-label="Your guesses"></div>'
-    +'<div id="msg" role="status"></div><div id="controls"></div><div id="kb" class="kb"></div><div id="result"></div>';
-  renderBoard();renderControls();
-  if(c.status==='playing')renderKeyboard();else renderResult();
-  fitBoard();
-}
-
-function renderBoard(){
-  const c=G.cur,el=$('#board');if(!el)return;
-  let html='';
-  for(let r=0;r<MAX_ATTEMPTS;r++){
-    const row=c.rows[r];
-    const active=!row&&r===c.rows.length&&c.status==='playing';
-    html+='<div class="row'+(r===c.flipRow?' flip':'')+(active&&c.shake?' shake':'')+'">';
-    html+=rowHTML(c,(li,ti)=>{
-      let ch='',state='empty';
-      if(row){ch=row.chars[li];state=row.marks[li];}
-      else if(active){
-        if(c.revealed.has(li)){ch=c.raw[li];state='hint';}
-        else if(c.typed[ti]){ch=c.typed[ti];state='typed';}
+      if (!response.ok) {
+        throw new Error('File could not be loaded');
       }
-      return '<div class="cell" data-state="'+state+'" style="--i:'+li+'">'+(ch?esc(disp(ch)):'')+'</div>';
-    });
-    html+='</div>';
-  }
-  if(c.status==='lost'){
-    html+='<div class="row">'+rowHTML(c,li=>'<div class="cell" data-state="answer">'+esc(disp(c.raw[li]))+'</div>')+'</div>';
-    html+='<div class="answer-label">The answer</div>';
-  }
-  el.style.setProperty('--stagger',(reduceMotion()?0:Math.max(40,Math.min(110,Math.floor(1100/c.n))))+'ms');
-  el.innerHTML=html;
-}
-function rowHTML(c,cellFn){
-  let html='<div class="grp">',li=0,ti=0;
-  for(const s of c.slots){
-    if(s.type==='s'){
-      if(s.ch===' ')html+='</div><div class="grp">';
-      else html+='<span class="sep">'+esc(s.ch)+'</span>';
-      continue;
+
+      SAMPLE = await response.text();
     }
-    html+=cellFn(li,ti);
-    if(!c.revealed.has(li))ti++;
-    li++;
-  }
-  return html+'</div>';
-}
-function fitBoard(){
-  const b=$('#board');if(!b||!G||!G.cur)return;
-  const c=G.cur,w=b.clientWidth||320,gap=5;
-  const groups=[0];
-  c.slots.forEach(s=>{if(s.type==='l')groups[groups.length-1]++;else if(s.ch===' ')groups.push(0);});
-  const oneLine=(w-gap*(c.n-groups.length)-16*(groups.length-1))/c.n;
-  const longest=Math.max(...groups);
-  const wrapFit=(w-gap*(longest-1))/longest;
-  let cell=oneLine>=30?oneLine:Math.min(34,wrapFit);
-  cell=Math.max(20,Math.min(52,Math.floor(cell)));
-  b.style.setProperty('--cell',cell+'px');
-}
 
-const ROWS={qwerty:['qwertyuiop','asdfghjkl','zxcvbnm'],qwertz:['qwertzuiop','asdfghjkl','yxcvbnm']};
-function renderKeyboard(){
-  const c=G.cur,el=$('#kb');if(!el)return;
-  const key=l=>'<button class="key" type="button" data-action="key" data-key="'+esc(l)+'" data-state="'+(c.keys[l]||'')+'">'+esc(disp(l))+'</button>';
-  const hasLatin=G.letters.some(l=>/^[a-z]$/.test(l));
-  const extras=G.letters.filter(l=>!/^[a-z]$/.test(l));
-  let html='';
-  if(hasLatin){
-    const rows=ROWS[S.settings.layout]||ROWS.qwerty;
-    rows.forEach((r,i)=>{
-      html+='<div class="krow">';
-      if(i===2)html+='<button class="key wide" type="button" data-action="enter">Enter</button>';
-      html+=[...r].map(key).join('');
-      if(i===2)html+='<button class="key wide" type="button" data-action="back" aria-label="Backspace">⌫</button>';
-      html+='</div>';
-    });
-  }
-  for(let i=0;i<extras.length;i+=10){
-    html+='<div class="krow">'+extras.slice(i,i+10).map(key).join('')+'</div>';
-  }
-  if(!hasLatin)html+='<div class="krow"><button class="key wide" type="button" data-action="enter">Enter</button><button class="key wide" type="button" data-action="back" aria-label="Backspace">⌫</button></div>';
-  el.innerHTML=html;
-}
-function hintCandidates(c){
-  const green=new Set();
-  c.rows.forEach(r=>r.marks.forEach((m,i)=>{if(m==='correct')green.add(i);}));
-  return [...Array(c.n).keys()].filter(i=>!c.revealed.has(i)&&!green.has(i));
-}
-function renderControls(){
-  const c=G.cur,el=$('#controls');if(!el)return;
-  if(c.status!=='playing'){el.innerHTML='';return;}
-  const max=Math.max(1,Math.floor(c.n/3));
-  const can=c.hints<max&&!c.busy&&hintCandidates(c).length>0;
-  el.innerHTML='<button class="btn sm" type="button" data-action="hint"'+(can?'':' disabled')+'>Reveal a letter <span class="cost">−'+HINT_COST+'</span></button>'
-    +'<button class="btn ghost sm" type="button" data-action="giveup">Show answer</button>';
-}
+    const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+    function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+    function fold(s) { return s.normalize('NFD').replace(/\p{M}/gu, '').normalize('NFC'); }
+    function normLetter(ch, strict) { const l = ch.toLowerCase(); return strict ? l : fold(l); }
 
-function flash(msg){
-  const m=$('#msg');if(!m)return;
-  m.textContent=msg;
-  clearTimeout(flash.t);
-  flash.t=setTimeout(()=>{const x=$('#msg');if(x)x.textContent='';},1800);
-}
-function announce(t){$('#sr').textContent=t;}
-
-function typeLetter(ch){
-  const c=G&&G.cur;if(!c||c.status!=='playing'||c.busy)return;
-  if(c.typed.length>=c.n-c.revealed.size)return;
-  c.typed.push(ch.toLowerCase());
-  renderBoard();
-}
-function backspace(){
-  const c=G&&G.cur;if(!c||c.status!=='playing'||c.busy)return;
-  c.typed.pop();renderBoard();
-}
-function reveal(){
-  const c=G&&G.cur;if(!c||c.status!=='playing'||c.busy)return;
-  if(c.hints>=Math.max(1,Math.floor(c.n/3)))return;
-  const cand=hintCandidates(c);if(!cand.length)return;
-  c.revealed.add(cand[Math.floor(Math.random()*cand.length)]);
-  c.hints++;
-  const cap=c.n-c.revealed.size;
-  if(c.typed.length>cap)c.typed.length=cap;
-  renderBoard();renderControls();
-}
-const RANK={absent:1,present:2,correct:3};
-function submit(){
-  const c=G&&G.cur;if(!c||c.status!=='playing'||c.busy)return;
-  if(c.typed.length<c.n-c.revealed.size){
-    flash('Not enough letters');
-    c.shake=true;renderBoard();
-    setTimeout(()=>{c.shake=false;if(G&&G.cur===c&&c.status==='playing')renderBoard();},380);
-    return;
-  }
-  const chars=[];let ti=0;
-  for(let i=0;i<c.n;i++)chars.push(c.revealed.has(i)?c.raw[i]:c.typed[ti++]);
-  const gNorm=chars.map(ch=>normLetter(ch,c.strict));
-  const marks=evaluate(gNorm,c.norm);
-  const shown=chars.map((ch,i)=>marks[i]==='correct'?c.raw[i]:ch);
-  c.rows.push({chars:shown,marks});c.typed=[];
-  gNorm.forEach((l,i)=>{if((RANK[marks[i]]||0)>(RANK[c.keys[l]]||0))c.keys[l]=marks[i];});
-  const won=marks.every(m=>m==='correct');
-  c.busy=true;c.flipRow=c.rows.length-1;
-  renderBoard();renderControls();
-  announce('Guess '+c.rows.length+': '+shown.map((ch,i)=>disp(ch)+' '+marks[i]).join(', '));
-  const delay=reduceMotion()?60:c.n*Math.max(40,Math.min(110,Math.floor(1100/c.n)))+500;
-  setTimeout(()=>{
-    c.busy=false;c.flipRow=-1;
-    if(won)finish(true);
-    else if(c.rows.length>=MAX_ATTEMPTS)finish(false);
-    else{renderBoard();renderKeyboard();renderControls();}
-  },delay);
-}
-
-function finish(won){
-  const c=G.cur;if(c.status!=='playing')return;
-  c.status=won?'won':'lost';
-  const item=c.item,guesses=c.rows.length;
-  let pts=0;
-  if(won){
-    c.info=scoreFor(guesses,c.hints,G.streak,item.relearn);
-    pts=c.info.points;G.score+=pts;G.streak++;
-    S.stats.points+=pts;
-  }else{
-    G.streak=0;
-  }
-  c.result={id:c.word.id,solved:won,guesses,hints:c.hints,points:pts,relearn:item.relearn};
-  G.results.push(c.result);
-  if(!G.cram)applyResult(c.word,{solved:won,guesses,hints:c.hints,relearn:item.relearn},Date.now());
-  if(!won&&item.retry<2){
-    G.queue.splice(Math.min(G.queue.length,G.idx+4),0,{id:item.id,retry:item.retry+1,relearn:true});
-    c.requeued=true;
-  }
-  save();renderHeader();
-  announce(won?'Solved in '+guesses+(guesses===1?' guess':' guesses'):'Not solved. The word was '+c.word.term);
-  renderGame();
-}
-function giveUp(){
-  const c=G&&G.cur;if(!c||c.status!=='playing'||c.busy)return;
-  finish(false);
-}
-
-function renderResult(){
-  const c=G.cur,el=$('#result');if(!el)return;
-  const now=Date.now(),w=c.word,last=G.idx+1>=G.queue.length;
-  let html='<div class="card result">';
-  if(c.status==='won'){
-    const i=c.info;
-    html+='<h3 class="won">Solved in '+plural(c.rows.length,'guess')+(c.rows.length===1?'. Nice.':'')+'</h3>'
-      +'<p class="pts">+'+c.result.points+' points</p>'
-      +'<p class="muted small">'+i.base+' for the guess'+(c.hints?', −'+(HINT_COST*c.hints)+' for '+plural(c.hints,'revealed letter'):'')
-      +' × '+i.mult.toFixed(1)+' streak'+(c.item.relearn?', half points for a second chance':'')+'</p>';
-  }else{
-    html+='<h3 class="lost">Not this time</h3><p class="answer-word">'+esc(w.term)+'</p>'
-      +'<p class="muted small">'+esc(w.hint)+'</p>';
-  }
-  if(G.cram){
-    html+='<p class="small">Practice mode. The schedule did not change.</p>';
-  }else if(c.status==='won'){
-    html+='<p class="small">Next review <b>'+esc(dueLabel(w.due,now))+'</b> · Box '+w.box+' of 5</p>';
-  }else if(c.requeued){
-    html+='<p class="small">It comes back a few words from now.</p>';
-  }else{
-    html+='<p class="small">It will be first in your next session.</p>';
-  }
-  html+='<div class="actions"><button class="btn primary" type="button" data-action="next">'+(last?'See results':'Next word')+'</button>'
-    +'<button class="btn ghost" type="button" data-action="quit">End session</button></div></div>';
-  el.innerHTML=html;
-  const b=el.querySelector('[data-action="next"]');if(b)b.focus({preventScroll:true});
-}
-
-function next(){
-  if(!G||!G.cur||G.cur.status==='playing')return;
-  if(G.idx+1>=G.queue.length)return showSummary();
-  G.idx++;startWord();
-}
-
-function showSummary(){
-  if(!G)return;
-  G.done=true;
-  const first=G.results.filter(r=>!r.relearn);
-  if(!G.recorded){
-    G.recorded=true;
-    if(first.length){
-      S.stats.best=Math.max(S.stats.best,G.score);
-      S.stats.sessions.unshift({t:Date.now(),score:G.score,solved:first.filter(r=>r.solved).length,total:first.length,cram:!!G.cram});
-      S.stats.sessions=S.stats.sessions.slice(0,30);
-      updateDayStreak(S.stats,Date.now());
-      save();
+    const TO_RE = /^to\s+(?=\S)/i;
+    function coreTerm(term, hideTo) { return hideTo && TO_RE.test(term) ? term.replace(TO_RE, '') : term; }
+    function tokenize(term) {
+      const slots = []; let n = 0;
+      for (const ch of term.normalize('NFC')) {
+        const last = slots[slots.length - 1];
+        if (MARK_RE.test(ch) && last && last.type === 'l') { last.ch += ch; continue; }
+        if (LETTER_RE.test(ch)) { slots.push({ type: 'l', ch }); n++; }
+        else if (/\s/.test(ch)) { slots.push({ type: 's', ch: ' ' }); }
+        else { slots.push({ type: 's', ch }); }
+      }
+      return { slots, n };
     }
-  }
-  renderHeader();renderPlay();
-}
-function renderSummary(){
-  const now=Date.now();
-  const first=G.results.filter(r=>!r.relearn);
-  const solved=first.filter(r=>r.solved);
-  const missed=first.filter(r=>!r.solved);
-  const avg=solved.length?(solved.reduce((a,r)=>a+r.guesses,0)/solved.length).toFixed(1):'–';
-  let html='<div class="card"><h2>'+(first.length?'Session complete':'Session ended')+'</h2>'
-    +'<div class="facts"><div><b>'+G.score+'</b><span>points</span></div>'
-    +'<div><b>'+solved.length+'/'+first.length+'</b><span>solved first time</span></div>'
-    +'<div><b>'+avg+'</b><span>avg guesses</span></div></div>';
-  if(G.cram)html+='<p class="muted small">Practice session. The schedule did not change.</p>';
-  if(missed.length){
-    html+='<h3>Worth another look</h3><ul class="summary-list">'+missed.map(r=>{
-      const w=S.words.find(x=>x.id===r.id);if(!w)return '';
-      const when=G.cram?'':(w.due<=now?'next session':esc(dueLabel(w.due,now)));
-      return '<li><span><span class="w">'+esc(w.term)+'</span><br><span class="muted small">'+esc(w.hint)+'</span></span><span class="when">'+when+'</span></li>';
-    }).join('')+'</ul>';
-  }else if(first.length){
-    html+='<p>No misses. Everything you saw today was a hit.</p>';
-  }
-  html+='<div class="actions"><button class="btn primary" type="button" data-action="again">Play again</button>'
-    +'<button class="btn" type="button" data-action="home">Done</button></div></div>';
-  $('#play-root').innerHTML=html;
-}
 
-$('#play-root').addEventListener('click',e=>{
-  const b=e.target.closest('[data-action]');if(!b)return;
-  const a=b.dataset.action;
-  if(a==='start')startSession(false);
-  else if(a==='practice')startSession(true);
-  else if(a==='key'){typeLetter(b.dataset.key);b.blur();}
-  else if(a==='enter'){submit();b.blur();}
-  else if(a==='back'){backspace();b.blur();}
-  else if(a==='hint'){reveal();b.blur();}
-  else if(a==='giveup')giveUp();
-  else if(a==='next')next();
-  else if(a==='quit'){if(G&&G.results.length)showSummary();else{G=null;renderPlay();}}
-  else if(a==='again'){const cram=G&&G.cram;G=null;startSession(!!cram&&!S.words.some(w=>isDue(w,Date.now())||w.tries===0));}
-  else if(a==='home'){G=null;renderPlay();}
-});
+    function evaluate(g, t) {
+      const n = t.length, marks = Array(n).fill('absent'), left = {};
+      for (let i = 0; i < n; i++) { if (g[i] === t[i]) marks[i] = 'correct'; else left[t[i]] = (left[t[i]] || 0) + 1; }
+      for (let i = 0; i < n; i++) { if (marks[i] === 'correct') continue; if (left[g[i]] > 0) { marks[i] = 'present'; left[g[i]]--; } }
+      return marks;
+    }
 
-document.addEventListener('keydown',e=>{
-  if(route!=='play'||!G||G.done||!G.cur)return;
-  const t=e.target;
-  if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))return;
-  if(e.ctrlKey||e.metaKey||e.altKey)return;
-  const c=G.cur;
-  if(e.key==='Enter'){e.preventDefault();if(c.status==='playing')submit();else next();return;}
-  if(c.status!=='playing')return;
-  if(e.key==='Backspace'){e.preventDefault();backspace();return;}
-  if(e.key.length===1&&LETTER_RE.test(e.key)){e.preventDefault();typeLetter(e.key);}
-});
-if(window.ResizeObserver)new ResizeObserver(()=>fitBoard()).observe($('#play-root'));
-window.addEventListener('resize',fitBoard);
+    function cleanCell(s) { return s.trim().replace(/^"(.*)"$/, '$1').replace(/\s+/g, ' ').trim().normalize('NFC'); }
+    function splitLine(line) {
+      const seps = [/=/, /\t/, /;/, /\|/, /\s[-–—]\s/];
+      for (const re of seps) { const m = re.exec(line); if (m) return [line.slice(0, m.index), line.slice(m.index + m[0].length)]; }
+      const c = line.indexOf(',');
+      if (c > 0) return [line.slice(0, c), line.slice(c + 1)];
+      return [line, ''];
+    }
+    function parseList(text) {
+      const entries = [], skipped = [], seen = new Set();
+      String(text).split(/\r?\n/).forEach((raw, i) => {
+        const line = raw.trim();
+        if (!line || line.startsWith('#')) return;
+        const [t, h] = splitLine(line);
+        const term = cleanCell(t), hint = cleanCell(h);
+        const n = tokenize(coreTerm(term, true)).n;
+        const bad = (reason) => skipped.push({ line: i + 1, text: line, reason });
+        if (!term) return bad('no word');
+        if (!hint) return bad('no meaning after the word');
+        if (n < MIN_LEN) return bad('needs at least ' + MIN_LEN + ' letters');
+        if (n > MAX_LEN) return bad('longer than ' + MAX_LEN + ' letters');
+        const key = term.toLowerCase();
+        if (seen.has(key)) return bad('duplicate of an earlier line');
+        seen.add(key);
+        entries.push({ term, hint });
+      });
+      return { entries, skipped };
+    }
 
-/* ---------- words tab ---------- */
-function abortSession(){if(G){G=null;}}
-function ensureOption(sel,val){
-  if(![...sel.options].some(o=>o.value===String(val))){
-    const o=document.createElement('option');o.value=String(val);o.textContent=String(val);sel.appendChild(o);
-  }
-  sel.value=String(val);
-}
-function fillWords(){
-  $('#words-input').value=S.words.map(w=>w.term+' = '+w.hint).join('\n');
-  ensureOption($('#set-size'),S.settings.sessionSize);
-  ensureOption($('#set-new'),S.settings.newPerSession);
-  $('#set-strict').checked=S.settings.strict;
-  $('#set-hideto').checked=S.settings.hideTo;
-  replaceNext=S.sample;
-  $('#set-layout').value=S.settings.layout;
-  $('#list-count').textContent=plural(S.words.length,'word')+' saved';
-  $('#list-status').textContent='';$('#backup-status').textContent='';
-  renderReset();
-}
-function saveList(force){
-  const parsed=parseList($('#words-input').value);
-  const st=$('#list-status');
-  if(!parsed.entries.length){
-    st.innerHTML='No valid lines found, so nothing was changed. Use the form <code>word = meaning</code>.';
-    return;
-  }
-  const m=mergeWords(S.words,parsed.entries);
-  if(m.removed>0&&!force&&!S.sample){
-    st.innerHTML=plural(m.removed,'word')+' in your saved list '+(m.removed===1?'is':'are')+' missing from this text and would be removed with '+(m.removed===1?'its':'their')+' progress. '
-      +'<button class="btn sm danger" type="button" id="confirm-save">Save and remove</button>';
-    return;
-  }
-  abortSession();
-  S.words=m.words;S.sample=false;save();
-  let msg='Saved '+plural(m.words.length,'word')+' ('+m.added+' new'+(m.updated?', '+m.updated+' changed':'')+(m.removed?', '+m.removed+' removed':'')+').';
-  if(parsed.skipped.length){
-    msg+=' '+plural(parsed.skipped.length,'line')+' skipped:<ul>'+parsed.skipped.slice(0,6).map(s=>'<li>line '+s.line+': '+esc(s.reason)+'</li>').join('')
-      +(parsed.skipped.length>6?'<li>and '+(parsed.skipped.length-6)+' more</li>':'')+'</ul>';
-  }
-  st.innerHTML=msg;
-  $('#list-count').textContent=plural(S.words.length,'word')+' saved';
-  renderHeader();
-}
-$('#save-list').addEventListener('click',()=>saveList(false));
-$('#list-status').addEventListener('click',e=>{if(e.target.id==='confirm-save')saveList(true);});
-let replaceNext=false;
-$('#file-in').addEventListener('change',e=>{
-  const files=[...(e.target.files||[])];
-  e.target.value='';
-  if(!files.length)return;
-  const read=f=>new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(String(r.result||'').trim());
-    r.onerror=()=>rej(f.name);
-    r.readAsText(f);
-  });
-  Promise.all(files.map(read)).then(texts=>{
-    const base=replaceNext?'':$('#words-input').value.trim();
-    replaceNext=false;
-    $('#words-input').value=[base,...texts].filter(Boolean).join('\n');
-    $('#list-status').textContent='Added '+plural(files.length,'file')+' to the text. Check the list, then press Save list.';
-  }).catch(name=>{$('#list-status').textContent='The file '+name+' could not be read.';});
-});
+    function newWord(e) { return { id: uid(), term: e.term, hint: e.hint, box: 0, due: 0, tries: 0, wins: 0, lapses: 0, last: 0 }; }
+    function mergeWords(existing, entries) {
+      const map = new Map(existing.map(w => [w.term.toLowerCase(), w]));
+      let added = 0, updated = 0; const out = [];
+      for (const e of entries) {
+        const k = e.term.toLowerCase(), old = map.get(k);
+        if (old) { if (old.hint !== e.hint || old.term !== e.term) updated++; out.push({ ...old, term: e.term, hint: e.hint }); map.delete(k); }
+        else { out.push(newWord(e)); added++; }
+      }
+      return { words: out, added, updated, removed: map.size };
+    }
 
-$('#set-size').addEventListener('change',e=>{S.settings.sessionSize=Number(e.target.value);save();});
-$('#set-new').addEventListener('change',e=>{S.settings.newPerSession=Number(e.target.value);save();});
-$('#set-strict').addEventListener('change',e=>{S.settings.strict=e.target.checked;save();});
-$('#set-hideto').addEventListener('change',e=>{S.settings.hideTo=e.target.checked;save();});
-$('#set-layout').addEventListener('change',e=>{S.settings.layout=e.target.value;save();});
+    function startOfDay(ts) { const d = new Date(ts); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
+    function addDays(ts, n) { const d = new Date(ts); return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n).getTime(); }
+    function dayKey(ts) { const d = new Date(ts); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+    function dueLabel(ts, now) {
+      if (ts <= now) return 'now';
+      const d = Math.round((startOfDay(ts) - startOfDay(now)) / 86400000);
+      if (d <= 0) return 'later today';
+      if (d === 1) return 'tomorrow';
+      if (d < 14) return 'in ' + d + ' days';
+      if (d < 60) return 'in ' + Math.round(d / 7) + ' weeks';
+      return 'in ' + Math.round(d / 30) + ' months';
+    }
+    function effStreak(stats, now) {
+      if (!stats.streak) return 0;
+      return (stats.lastDay === dayKey(now) || stats.lastDay === dayKey(addDays(now, -1))) ? stats.streak : 0;
+    }
+    function updateDayStreak(stats, now) {
+      const today = dayKey(now);
+      if (stats.lastDay === today) return;
+      stats.streak = stats.lastDay === dayKey(addDays(now, -1)) ? stats.streak + 1 : 1;
+      stats.lastDay = today;
+    }
 
-function backupJSON(){return JSON.stringify({app:'lexigrid',v:1,words:S.words,settings:S.settings,stats:S.stats,sample:S.sample});}
-$('#copy-backup').addEventListener('click',()=>{
-  const ta=$('#backup-area'),st=$('#backup-status');
-  ta.value=backupJSON();ta.focus();ta.select();
-  const fallback=()=>{st.textContent='Select the text above and copy it (Ctrl or Cmd + C).';};
-  try{
-    navigator.clipboard.writeText(ta.value).then(()=>{st.textContent='Backup copied. Paste it somewhere safe.';},fallback);
-  }catch(e){fallback();}
-});
-$('#restore-backup').addEventListener('click',()=>{
-  const st=$('#backup-status');
-  try{
-    const o=JSON.parse($('#backup-area').value);
-    if(!o||!Array.isArray(o.words))throw new Error('shape');
-    const next=sanitize(o);
-    if(!next.words.length)throw new Error('empty');
-    abortSession();S=next;save();fillWords();renderHeader();
-    $('#backup-status').textContent='Restored '+plural(S.words.length,'word')+' with their progress.';
-  }catch(e){st.textContent='That is not a valid backup. Paste the full text from Copy backup.';}
-});
-function renderReset(){
-  $('#reset-zone').innerHTML=pendingReset
-    ?'<span class="small">Erase every word and all progress?</span><button class="btn danger sm" type="button" data-r="yes">Yes, erase everything</button><button class="btn sm" type="button" data-r="no">Cancel</button>'
-    :'<button class="btn danger sm" type="button" data-r="ask">Reset all progress and words</button>';
-}
-$('#reset-zone').addEventListener('click',e=>{
-  const r=e.target.dataset&&e.target.dataset.r;if(!r)return;
-  if(r==='ask')pendingReset=true;
-  else if(r==='no')pendingReset=false;
-  else if(r==='yes'){
-    pendingReset=false;abortSession();
-    S=sanitize({words:[],sample:false});S.stats.points=0;save();
-    fillWords();renderHeader();
-    $('#list-status').textContent='Everything was erased. Add words above to start again.';
-  }
-  renderReset();
-});
+    const isDue = (w, now) => w.tries > 0 && w.due <= now;
+    function stageOf(w) { if (w.tries === 0) return 'new'; if (w.box === 0) return 'missed'; return 'box' + w.box; }
 
-/* ---------- progress tab ---------- */
-const STAGES=[
-  {k:'new',label:'New',sub:'unseen'},{k:'missed',label:'Missed',sub:'now'},
-  {k:'box1',label:'Box 1',sub:'1 day'},{k:'box2',label:'Box 2',sub:'3 days'},
-  {k:'box3',label:'Box 3',sub:'1 week'},{k:'box4',label:'Box 4',sub:'16 days'},{k:'box5',label:'Box 5',sub:'5 weeks'}
-];
-const stageLabel=k=>(STAGES.find(s=>s.k===k)||{}).label||k;
-function renderProgress(){
-  const now=Date.now(),W=S.words;
-  const due=W.filter(w=>isDue(w,now)).length;
-  const mastered=W.filter(w=>w.tries>0&&w.box===5).length;
-  const tries=W.reduce((a,w)=>a+w.tries,0),wins=W.reduce((a,w)=>a+w.wins,0);
-  const items=[['Words',W.length],['Due now',due],['In Box 5',mastered],['Right first look',tries?Math.round(100*wins/tries)+'%':'–'],
-    ['Total points',S.stats.points.toLocaleString()],['Best session',S.stats.best],['Day streak',effStreak(S.stats,now)]];
-  $('#prog-stats').innerHTML=items.map(i=>'<div><dt>'+i[0]+'</dt><dd>'+i[1]+'</dd></div>').join('');
-  const counts={};STAGES.forEach(s=>counts[s.k]=0);
-  W.forEach(w=>{counts[stageOf(w)]++;});
-  const max=Math.max(1,...Object.values(counts));
-  $('#stage-chart').innerHTML=STAGES.map(s=>'<div class="stage" data-k="'+s.k+'"><span class="n">'+counts[s.k]+'</span>'
-    +'<div class="bar"><i style="--h:'+Math.round(100*counts[s.k]/max)+'%"></i></div>'
-    +'<span class="lab">'+s.label+'</span><span class="int">'+s.sub+'</span></div>').join('');
-  renderWordList();
-  const h=S.stats.sessions;
-  $('#hist').innerHTML=h.length?h.slice(0,8).map(s=>'<li><span>'+esc(new Date(s.t).toLocaleDateString(undefined,{day:'numeric',month:'short'}))+(s.cram?' · practice':'')
-    +'</span><span class="tnum"><b>'+s.score+'</b> pts · '+s.solved+'/'+s.total+' solved</span></li>').join('')
-    :'<li class="empty">No sessions yet. Your first one will show up here.</li>';
-}
-function renderWordList(){
-  const now=Date.now(),q=$('#wf-q').value.trim().toLowerCase(),show=$('#wf-show').value;
-  const rows=S.words.filter(w=>{
-    if(q&&!(w.term.toLowerCase().includes(q)||w.hint.toLowerCase().includes(q)))return false;
-    const st=stageOf(w);
-    if(show==='due')return isDue(w,now);
-    if(show==='missed')return st==='missed';
-    if(show==='new')return st==='new';
-    if(show==='mastered')return st==='box5';
-    return true;
-  });
-  $('#word-ul').innerHTML=rows.length?rows.map(w=>{
-    const st=stageOf(w);
-    const when=w.tries===0?'Not seen yet':isDue(w,now)?'Due now':'Next '+dueLabel(w.due,now);
-    return '<li><div class="l"><b>'+esc(w.term)+'</b><span>'+esc(w.hint)+'</span></div>'
-      +'<div class="r"><span class="pill" data-s="'+st+'">'+esc(stageLabel(st))+'</span><small>'+esc(when)+(w.tries?' · '+w.wins+'/'+w.tries+' right':'')+'</small></div></li>';
-  }).join(''):'<li class="empty">No words match.</li>';
-}
-$('#wf-q').addEventListener('input',renderWordList);
-$('#wf-show').addEventListener('change',renderWordList);
+    function scoreFor(guesses, hints, streak, relearn) {
+      const base = GUESS_POINTS[guesses - 1];
+      const afterHints = Math.max(MIN_POINTS, base - HINT_COST * hints);
+      const mult = 1 + 0.1 * Math.min(streak, 10);
+      let pts = afterHints * mult;
+      if (relearn) pts *= 0.5;
+      return { base, afterHints, mult, points: Math.round(pts) };
+    }
 
-setRoute();
-})();
-</script>
+    function applyResult(w, r, now) {
+      const wasNew = w.tries === 0;
+      w.tries++; w.last = now;
+      if (r.solved) {
+        w.wins++;
+        const clean = r.hints === 0 && r.guesses <= 3;
+        w.box = clean ? Math.min(5, w.box + 1) : Math.max(1, w.box);
+        if (r.relearn) w.box = 1;
+        w.due = addDays(now, INTERVALS[w.box]);
+      } else {
+        if (!wasNew) w.lapses++;
+        w.box = 0; w.due = now;
+      }
+      return w;
+    }
 
-</body></html>
+    function pickSession(words, s, now) {
+      const due = words.filter(w => isDue(w, now)).sort((a, b) => a.box - b.box || a.due - b.due);
+      const fresh = words.filter(w => w.tries === 0);
+      const dueTake = due.slice(0, s.sessionSize);
+      const newTake = fresh.slice(0, Math.max(0, Math.min(s.newPerSession, s.sessionSize - dueTake.length)));
+      return { words: shuffle([...dueTake, ...newTake]), due: dueTake.length, fresh: newTake.length, dueTotal: due.length, freshTotal: fresh.length };
+    }
+    function practicePick(words, size) {
+      const seen = words.filter(w => w.tries > 0).sort((a, b) => a.box - b.box || a.due - b.due);
+      const rest = words.filter(w => w.tries === 0);
+      return shuffle([...seen, ...rest].slice(0, size));
+    }
+
+    function sanitize(o) {
+      const num = (v, d, min, max) => { v = Number(v); return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : d; };
+      const ok = w => w && typeof w.term === 'string' && typeof w.hint === 'string' && (() => { const n = tokenize(coreTerm(w.term, true)).n; return n >= MIN_LEN && n <= MAX_LEN; })();
+      const words = (Array.isArray(o.words) ? o.words : []).filter(ok).map(w => ({
+        id: String(w.id || uid()), term: w.term, hint: w.hint, box: num(w.box, 0, 0, 5), due: num(w.due, 0, 0, 8.64e15),
+        tries: num(w.tries, 0, 0, 1e6), wins: num(w.wins, 0, 0, 1e6), lapses: num(w.lapses, 0, 0, 1e6), last: num(w.last, 0, 0, 8.64e15)
+      }));
+      const st = o.settings || {};
+      const settings = { sessionSize: num(st.sessionSize, 10, 3, 50), newPerSession: num(st.newPerSession, 5, 0, 50), strict: st.strict !== false, hideTo: st.hideTo !== false, layout: st.layout === 'qwerty' ? 'qwerty' : 'qwertz' };
+      const sx = o.stats || {};
+      const stats = {
+        points: num(sx.points, 0, 0, 1e9), best: num(sx.best, 0, 0, 1e9), streak: num(sx.streak, 0, 0, 1e5), lastDay: typeof sx.lastDay === 'string' ? sx.lastDay : '',
+        sessions: Array.isArray(sx.sessions) ? sx.sessions.filter(s => s && typeof s === 'object').slice(0, 30) : []
+      };
+      return { v: 1, words, settings, stats, sample: !!o.sample };
+    }
+    function freshState() {
+      return sanitize({ words: parseList(SAMPLE).entries.map(newWord), sample: true });
+    }
+  </script>
+
+  <script>
+    (async function () {
+      'use strict';
+
+      try {
+        await loadSamples();
+      } catch (error) {
+        console.error(error);
+        alert('samples.txt could not be loaded.');
+        return;
+      }
+      const KEY = 'lexigrid.v1';
+      const $ = (s, r = document) => r.querySelector(s);
+      const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const disp = ch => { const u = ch.toUpperCase(); return u.length === ch.length ? u : ch; };
+      const reduceMotion = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+      const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : 's');
+
+      let storageOK = true;
+      try { localStorage.setItem('lexigrid.t', '1'); localStorage.removeItem('lexigrid.t'); } catch (e) { storageOK = false; }
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (raw) { const o = JSON.parse(raw); if (o && Array.isArray(o.words)) return sanitize(o); }
+        } catch (e) { }
+        return freshState();
+      }
+      let S = load(), G = null, route = 'play', pendingReset = false;
+
+      function save() {
+        if (!storageOK) return;
+        try { localStorage.setItem(KEY, JSON.stringify(S)); }
+        catch (e) { storageOK = false; $('#store-warn').hidden = false; }
+      }
+
+      /* ---------- header and routing ---------- */
+      function renderHeader() {
+        const st = effStreak(S.stats, Date.now());
+        $('#hdr-meta').innerHTML = '<span><b>' + S.stats.points.toLocaleString() + '</b> pts</span>' + (st > 0 ? '<span><b>' + st + '</b>-day streak</span>' : '');
+        $('#store-warn').hidden = storageOK;
+      }
+      function setRoute() {
+        const h = location.hash.replace('#', '');
+        route = ['play', 'words', 'progress'].includes(h) ? h : 'play';
+        document.querySelectorAll('.tabs a').forEach(a => {
+          if (a.dataset.tab === route) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+        ['play', 'words', 'progress'].forEach(r => { $('#view-' + r).hidden = r !== route; });
+        if (route === 'play') { renderPlay(); }
+        if (route === 'words') { fillWords(); }
+        if (route === 'progress') { renderProgress(); }
+        renderHeader();
+      }
+      window.addEventListener('hashchange', setRoute);
+
+      /* ---------- play: home ---------- */
+      function renderPlay() {
+        if (!G) renderHome();
+        else if (G.done) renderSummary();
+        else renderGame();
+      }
+
+      function renderHome() {
+        const now = Date.now(), W = S.words;
+        const due = W.filter(w => isDue(w, now)).length, fresh = W.filter(w => w.tries === 0).length;
+        const pick = pickSession(W, S.settings, now);
+        const n = pick.words.length;
+        let html = '';
+        // if (S.sample) html += '<div class="note">You are playing with an example list. Replace it with your own in <a href="#words">Words</a>.</div>';
+        if (!W.length) {
+          html += '<div class="card"><h2>No words yet</h2><p class="muted">Add a few lines like <code>perro = dog</code> in <a href="#words">Words</a>, then come back.</p></div>';
+        } else if (n > 0) {
+          html += '<div class="card"><h2>Ready when you are</h2>'
+            + '<p class="lead">' + due + ' due for review · ' + fresh + ' new in your list</p>'
+            + '<p class="muted small">This session: ' + plural(n, 'word') + (pick.fresh ? ', ' + pick.fresh + ' of them new' : '') + '. Words you miss come back before it ends.</p>'
+            + '<div class="actions"><button class="btn primary" type="button" data-action="start">Start session</button>'
+            + '<button class="btn" type="button" data-action="practice">Extra practice</button></div>'
+            + howItWorks() + '</div>';
+        } else {
+          const next = Math.min(...W.filter(w => w.tries > 0).map(w => w.due));
+          html += '<div class="card"><h2>You are all caught up</h2>'
+            + '<p class="lead">Next review ' + esc(dueLabel(next, now)) + '</p>'
+            + '<p class="muted small">Extra practice mixes your weakest words and leaves the schedule alone.</p>'
+            + '<div class="actions"><button class="btn primary" type="button" data-action="practice">Extra practice</button></div>'
+            + howItWorks() + '</div>';
+        }
+        $('#play-root').innerHTML = html;
+      }
+      function howItWorks() {
+        return '<details><summary>How scoring and repetition work</summary><ul>'
+          + '<li>Guess the word from its meaning. Green is the right letter in the right place, yellow is in the word but elsewhere.</li>'
+          + '<li>Points: 100 for the first guess, then 80, 65, 50, 35, 20. A revealed letter costs ' + HINT_COST + '.</li>'
+          + '<li>Every word you solve in a row adds 0.1 to a multiplier, up to ×2.</li>'
+          + '<li>Solve in three guesses or fewer without a hint and the word moves up a box. Reviews come after 1, 3, 7, 16 and 35 days.</li>'
+          + '<li>Miss a word and it returns later in the same session for half points, then drops to the first box.</li>'
+          + '</ul></details>';
+      }
+
+      /* ---------- play: session ---------- */
+      function startSession(cram) {
+        let words;
+        if (cram) words = practicePick(S.words, S.settings.sessionSize);
+        else words = pickSession(S.words, S.settings, Date.now()).words;
+        if (!words.length) return;
+        const set = new Set();
+        S.words.forEach(w => tokenize(coreTerm(w.term, S.settings.hideTo)).slots.forEach(s => { if (s.type === 'l') set.add(normLetter(s.ch, S.settings.strict)); }));
+        G = {
+          queue: words.map(w => ({ id: w.id, retry: 0, relearn: false })), idx: 0, cram, score: 0, streak: 0, results: [], done: false, cur: null,
+          letters: [...set].sort((a, b) => a.localeCompare(b))
+        };
+        startWord();
+      }
+
+      function startWord() {
+        const item = G.queue[G.idx];
+        const word = S.words.find(w => w.id === item.id);
+        if (!word) {
+          if (G.idx + 1 >= G.queue.length) return showSummary();
+          G.idx++; return startWord();
+        }
+        const stripped = !!S.settings.hideTo && TO_RE.test(word.term);
+        const tk = tokenize(coreTerm(word.term, S.settings.hideTo)), strict = S.settings.strict;
+        const raw = tk.slots.filter(s => s.type === 'l').map(s => s.ch.toLowerCase());
+        const tab = item.relearn ? 'Second chance' : word.tries === 0 ? 'New word' : word.box === 0 ? 'Missed before' : 'Box ' + word.box;
+        G.cur = {
+          word, item, verbTo: stripped, slots: tk.slots, n: tk.n, raw, norm: raw.map(ch => normLetter(ch, strict)), strict, tab,
+          rows: [], typed: [], revealed: new Set(), hints: 0, status: 'playing', busy: false, flipRow: -1, shake: false, keys: {}, result: null, info: null, requeued: false
+        };
+        renderPlay();
+      }
+
+      function renderGame() {
+        const c = G.cur, total = G.queue.length;
+        const mult = (1 + 0.1 * Math.min(G.streak, 10)).toFixed(1);
+        const groups = c.slots.filter(s => s.type === 's' && s.ch === ' ').length + 1;
+        $('#play-root').innerHTML =
+          '<div><div class="sessionbar"><span>Word <b>' + (G.idx + 1) + '</b> of ' + total + (G.cram ? ' · practice' : '') + '</span>'
+          + '<span class="tnum">Score <b>' + G.score + '</b> · streak ×' + mult + '</span></div>'
+          + '<div class="track" aria-hidden="true"><i style="width:' + Math.round(100 * G.idx / total) + '%"></i></div></div>'
+          + '<div class="prompt"><span class="tab">' + esc(c.tab) + '</span><p class="meaning">' + esc(c.word.hint) + '</p>'
+          + '<p class="meta">' + plural(c.n, 'letter') + (groups > 1 ? ' · ' + groups + ' words' : '') + (c.verbTo ? ' · verb, “to” is not part of the answer' : '') + '</p></div>'
+          + '<div id="board" class="board" role="group" aria-label="Your guesses"></div>'
+          + '<div id="msg" role="status"></div><div id="controls"></div><div id="kb" class="kb"></div><div id="result"></div>';
+        renderBoard(); renderControls();
+        if (c.status === 'playing') renderKeyboard(); else renderResult();
+        fitBoard();
+      }
+
+      function renderBoard() {
+        const c = G.cur, el = $('#board'); if (!el) return;
+        let html = '';
+        for (let r = 0; r < MAX_ATTEMPTS; r++) {
+          const row = c.rows[r];
+          const active = !row && r === c.rows.length && c.status === 'playing';
+          html += '<div class="row' + (r === c.flipRow ? ' flip' : '') + (active && c.shake ? ' shake' : '') + '">';
+          html += rowHTML(c, (li, ti) => {
+            let ch = '', state = 'empty';
+            if (row) { ch = row.chars[li]; state = row.marks[li]; }
+            else if (active) {
+              if (c.revealed.has(li)) { ch = c.raw[li]; state = 'hint'; }
+              else if (c.typed[ti]) { ch = c.typed[ti]; state = 'typed'; }
+            }
+            return '<div class="cell" data-state="' + state + '" style="--i:' + li + '">' + (ch ? esc(disp(ch)) : '') + '</div>';
+          });
+          html += '</div>';
+        }
+        if (c.status === 'lost') {
+          html += '<div class="row">' + rowHTML(c, li => '<div class="cell" data-state="answer">' + esc(disp(c.raw[li])) + '</div>') + '</div>';
+          html += '<div class="answer-label">The answer</div>';
+        }
+        el.style.setProperty('--stagger', (reduceMotion() ? 0 : Math.max(40, Math.min(110, Math.floor(1100 / c.n)))) + 'ms');
+        el.innerHTML = html;
+      }
+      function rowHTML(c, cellFn) {
+        let html = '<div class="grp">', li = 0, ti = 0;
+        for (const s of c.slots) {
+          if (s.type === 's') {
+            if (s.ch === ' ') html += '</div><div class="grp">';
+            else html += '<span class="sep">' + esc(s.ch) + '</span>';
+            continue;
+          }
+          html += cellFn(li, ti);
+          if (!c.revealed.has(li)) ti++;
+          li++;
+        }
+        return html + '</div>';
+      }
+      function fitBoard() {
+        const b = $('#board'); if (!b || !G || !G.cur) return;
+        const c = G.cur, w = b.clientWidth || 320, gap = 5;
+        const groups = [0];
+        c.slots.forEach(s => { if (s.type === 'l') groups[groups.length - 1]++; else if (s.ch === ' ') groups.push(0); });
+        const oneLine = (w - gap * (c.n - groups.length) - 16 * (groups.length - 1)) / c.n;
+        const longest = Math.max(...groups);
+        const wrapFit = (w - gap * (longest - 1)) / longest;
+        let cell = oneLine >= 30 ? oneLine : Math.min(34, wrapFit);
+        cell = Math.max(20, Math.min(52, Math.floor(cell)));
+        b.style.setProperty('--cell', cell + 'px');
+      }
+
+      const ROWS = { qwerty: ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'], qwertz: ['qwertzuiop', 'asdfghjkl', 'yxcvbnm'] };
+      function renderKeyboard() {
+        const c = G.cur, el = $('#kb'); if (!el) return;
+        const key = l => '<button class="key" type="button" data-action="key" data-key="' + esc(l) + '" data-state="' + (c.keys[l] || '') + '">' + esc(disp(l)) + '</button>';
+        const hasLatin = G.letters.some(l => /^[a-z]$/.test(l));
+        const extras = G.letters.filter(l => !/^[a-z]$/.test(l));
+        let html = '';
+        if (hasLatin) {
+          const rows = ROWS[S.settings.layout] || ROWS.qwerty;
+          rows.forEach((r, i) => {
+            html += '<div class="krow">';
+            if (i === 2) html += '<button class="key wide" type="button" data-action="enter">Enter</button>';
+            html += [...r].map(key).join('');
+            if (i === 2) html += '<button class="key wide" type="button" data-action="back" aria-label="Backspace">⌫</button>';
+            html += '</div>';
+          });
+        }
+        for (let i = 0; i < extras.length; i += 10) {
+          html += '<div class="krow">' + extras.slice(i, i + 10).map(key).join('') + '</div>';
+        }
+        if (!hasLatin) html += '<div class="krow"><button class="key wide" type="button" data-action="enter">Enter</button><button class="key wide" type="button" data-action="back" aria-label="Backspace">⌫</button></div>';
+        el.innerHTML = html;
+      }
+      function hintCandidates(c) {
+        const green = new Set();
+        c.rows.forEach(r => r.marks.forEach((m, i) => { if (m === 'correct') green.add(i); }));
+        return [...Array(c.n).keys()].filter(i => !c.revealed.has(i) && !green.has(i));
+      }
+      function renderControls() {
+        const c = G.cur, el = $('#controls'); if (!el) return;
+        if (c.status !== 'playing') { el.innerHTML = ''; return; }
+        const max = Math.max(1, Math.floor(c.n / 3));
+        const can = c.hints < max && !c.busy && hintCandidates(c).length > 0;
+        el.innerHTML = '<button class="btn sm" type="button" data-action="hint"' + (can ? '' : ' disabled') + '>Reveal a letter <span class="cost">−' + HINT_COST + '</span></button>'
+          + '<button class="btn ghost sm" type="button" data-action="giveup">Show answer</button>';
+      }
+
+      function flash(msg) {
+        const m = $('#msg'); if (!m) return;
+        m.textContent = msg;
+        clearTimeout(flash.t);
+        flash.t = setTimeout(() => { const x = $('#msg'); if (x) x.textContent = ''; }, 1800);
+      }
+      function announce(t) { $('#sr').textContent = t; }
+
+      function typeLetter(ch) {
+        const c = G && G.cur; if (!c || c.status !== 'playing' || c.busy) return;
+        if (c.typed.length >= c.n - c.revealed.size) return;
+        c.typed.push(ch.toLowerCase());
+        renderBoard();
+      }
+      function backspace() {
+        const c = G && G.cur; if (!c || c.status !== 'playing' || c.busy) return;
+        c.typed.pop(); renderBoard();
+      }
+      function reveal() {
+        const c = G && G.cur; if (!c || c.status !== 'playing' || c.busy) return;
+        if (c.hints >= Math.max(1, Math.floor(c.n / 3))) return;
+        const cand = hintCandidates(c); if (!cand.length) return;
+        c.revealed.add(cand[Math.floor(Math.random() * cand.length)]);
+        c.hints++;
+        const cap = c.n - c.revealed.size;
+        if (c.typed.length > cap) c.typed.length = cap;
+        renderBoard(); renderControls();
+      }
+      const RANK = { absent: 1, present: 2, correct: 3 };
+      function submit() {
+        const c = G && G.cur; if (!c || c.status !== 'playing' || c.busy) return;
+        if (c.typed.length < c.n - c.revealed.size) {
+          flash('Not enough letters');
+          c.shake = true; renderBoard();
+          setTimeout(() => { c.shake = false; if (G && G.cur === c && c.status === 'playing') renderBoard(); }, 380);
+          return;
+        }
+        const chars = []; let ti = 0;
+        for (let i = 0; i < c.n; i++)chars.push(c.revealed.has(i) ? c.raw[i] : c.typed[ti++]);
+        const gNorm = chars.map(ch => normLetter(ch, c.strict));
+        const marks = evaluate(gNorm, c.norm);
+        const shown = chars.map((ch, i) => marks[i] === 'correct' ? c.raw[i] : ch);
+        c.rows.push({ chars: shown, marks }); c.typed = [];
+        gNorm.forEach((l, i) => { if ((RANK[marks[i]] || 0) > (RANK[c.keys[l]] || 0)) c.keys[l] = marks[i]; });
+        const won = marks.every(m => m === 'correct');
+        c.busy = true; c.flipRow = c.rows.length - 1;
+        renderBoard(); renderControls();
+        announce('Guess ' + c.rows.length + ': ' + shown.map((ch, i) => disp(ch) + ' ' + marks[i]).join(', '));
+        const delay = reduceMotion() ? 60 : c.n * Math.max(40, Math.min(110, Math.floor(1100 / c.n))) + 500;
+        setTimeout(() => {
+          c.busy = false; c.flipRow = -1;
+          if (won) finish(true);
+          else if (c.rows.length >= MAX_ATTEMPTS) finish(false);
+          else { renderBoard(); renderKeyboard(); renderControls(); }
+        }, delay);
+      }
+
+      function finish(won) {
+        const c = G.cur; if (c.status !== 'playing') return;
+        c.status = won ? 'won' : 'lost';
+        const item = c.item, guesses = c.rows.length;
+        let pts = 0;
+        if (won) {
+          c.info = scoreFor(guesses, c.hints, G.streak, item.relearn);
+          pts = c.info.points; G.score += pts; G.streak++;
+          S.stats.points += pts;
+        } else {
+          G.streak = 0;
+        }
+        c.result = { id: c.word.id, solved: won, guesses, hints: c.hints, points: pts, relearn: item.relearn };
+        G.results.push(c.result);
+        if (!G.cram) applyResult(c.word, { solved: won, guesses, hints: c.hints, relearn: item.relearn }, Date.now());
+        if (!won && item.retry < 2) {
+          G.queue.splice(Math.min(G.queue.length, G.idx + 4), 0, { id: item.id, retry: item.retry + 1, relearn: true });
+          c.requeued = true;
+        }
+        save(); renderHeader();
+        announce(won ? 'Solved in ' + guesses + (guesses === 1 ? ' guess' : ' guesses') : 'Not solved. The word was ' + c.word.term);
+        renderGame();
+      }
+      function giveUp() {
+        const c = G && G.cur; if (!c || c.status !== 'playing' || c.busy) return;
+        finish(false);
+      }
+
+      function renderResult() {
+        const c = G.cur, el = $('#result'); if (!el) return;
+        const now = Date.now(), w = c.word, last = G.idx + 1 >= G.queue.length;
+        let html = '<div class="card result">';
+        if (c.status === 'won') {
+          const i = c.info;
+          html += '<h3 class="won">Solved in ' + plural(c.rows.length, 'guess') + (c.rows.length === 1 ? '. Nice.' : '') + '</h3>'
+            + '<p class="pts">+' + c.result.points + ' points</p>'
+            + '<p class="muted small">' + i.base + ' for the guess' + (c.hints ? ', −' + (HINT_COST * c.hints) + ' for ' + plural(c.hints, 'revealed letter') : '')
+            + ' × ' + i.mult.toFixed(1) + ' streak' + (c.item.relearn ? ', half points for a second chance' : '') + '</p>';
+        } else {
+          html += '<h3 class="lost">Not this time</h3><p class="answer-word">' + esc(w.term) + '</p>'
+            + '<p class="muted small">' + esc(w.hint) + '</p>';
+        }
+        if (G.cram) {
+          html += '<p class="small">Practice mode. The schedule did not change.</p>';
+        } else if (c.status === 'won') {
+          html += '<p class="small">Next review <b>' + esc(dueLabel(w.due, now)) + '</b> · Box ' + w.box + ' of 5</p>';
+        } else if (c.requeued) {
+          html += '<p class="small">It comes back a few words from now.</p>';
+        } else {
+          html += '<p class="small">It will be first in your next session.</p>';
+        }
+        html += '<div class="actions"><button class="btn primary" type="button" data-action="next">' + (last ? 'See results' : 'Next word') + '</button>'
+          + '<button class="btn ghost" type="button" data-action="quit">End session</button></div></div>';
+        el.innerHTML = html;
+        const b = el.querySelector('[data-action="next"]'); if (b) b.focus({ preventScroll: true });
+      }
+
+      function next() {
+        if (!G || !G.cur || G.cur.status === 'playing') return;
+        if (G.idx + 1 >= G.queue.length) return showSummary();
+        G.idx++; startWord();
+      }
+
+      function showSummary() {
+        if (!G) return;
+        G.done = true;
+        const first = G.results.filter(r => !r.relearn);
+        if (!G.recorded) {
+          G.recorded = true;
+          if (first.length) {
+            S.stats.best = Math.max(S.stats.best, G.score);
+            S.stats.sessions.unshift({ t: Date.now(), score: G.score, solved: first.filter(r => r.solved).length, total: first.length, cram: !!G.cram });
+            S.stats.sessions = S.stats.sessions.slice(0, 30);
+            updateDayStreak(S.stats, Date.now());
+            save();
+          }
+        }
+        renderHeader(); renderPlay();
+      }
+      function renderSummary() {
+        const now = Date.now();
+        const first = G.results.filter(r => !r.relearn);
+        const solved = first.filter(r => r.solved);
+        const missed = first.filter(r => !r.solved);
+        const avg = solved.length ? (solved.reduce((a, r) => a + r.guesses, 0) / solved.length).toFixed(1) : '–';
+        let html = '<div class="card"><h2>' + (first.length ? 'Session complete' : 'Session ended') + '</h2>'
+          + '<div class="facts"><div><b>' + G.score + '</b><span>points</span></div>'
+          + '<div><b>' + solved.length + '/' + first.length + '</b><span>solved first time</span></div>'
+          + '<div><b>' + avg + '</b><span>avg guesses</span></div></div>';
+        if (G.cram) html += '<p class="muted small">Practice session. The schedule did not change.</p>';
+        if (missed.length) {
+          html += '<h3>Worth another look</h3><ul class="summary-list">' + missed.map(r => {
+            const w = S.words.find(x => x.id === r.id); if (!w) return '';
+            const when = G.cram ? '' : (w.due <= now ? 'next session' : esc(dueLabel(w.due, now)));
+            return '<li><span><span class="w">' + esc(w.term) + '</span><br><span class="muted small">' + esc(w.hint) + '</span></span><span class="when">' + when + '</span></li>';
+          }).join('') + '</ul>';
+        } else if (first.length) {
+          html += '<p>No misses. Everything you saw today was a hit.</p>';
+        }
+        html += '<div class="actions"><button class="btn primary" type="button" data-action="again">Play again</button>'
+          + '<button class="btn" type="button" data-action="home">Done</button></div></div>';
+        $('#play-root').innerHTML = html;
+      }
+
+      $('#play-root').addEventListener('click', e => {
+        const b = e.target.closest('[data-action]'); if (!b) return;
+        const a = b.dataset.action;
+        if (a === 'start') startSession(false);
+        else if (a === 'practice') startSession(true);
+        else if (a === 'key') { typeLetter(b.dataset.key); b.blur(); }
+        else if (a === 'enter') { submit(); b.blur(); }
+        else if (a === 'back') { backspace(); b.blur(); }
+        else if (a === 'hint') { reveal(); b.blur(); }
+        else if (a === 'giveup') giveUp();
+        else if (a === 'next') next();
+        else if (a === 'quit') { if (G && G.results.length) showSummary(); else { G = null; renderPlay(); } }
+        else if (a === 'again') { const cram = G && G.cram; G = null; startSession(!!cram && !S.words.some(w => isDue(w, Date.now()) || w.tries === 0)); }
+        else if (a === 'home') { G = null; renderPlay(); }
+      });
+
+      document.addEventListener('keydown', e => {
+        if (route !== 'play' || !G || G.done || !G.cur) return;
+        const t = e.target;
+        if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        const c = G.cur;
+        if (e.key === 'Enter') { e.preventDefault(); if (c.status === 'playing') submit(); else next(); return; }
+        if (c.status !== 'playing') return;
+        if (e.key === 'Backspace') { e.preventDefault(); backspace(); return; }
+        if (e.key.length === 1 && LETTER_RE.test(e.key)) { e.preventDefault(); typeLetter(e.key); }
+      });
+      if (window.ResizeObserver) new ResizeObserver(() => fitBoard()).observe($('#play-root'));
+      window.addEventListener('resize', fitBoard);
+
+      /* ---------- words tab ---------- */
+      function abortSession() { if (G) { G = null; } }
+      function ensureOption(sel, val) {
+        if (![...sel.options].some(o => o.value === String(val))) {
+          const o = document.createElement('option'); o.value = String(val); o.textContent = String(val); sel.appendChild(o);
+        }
+        sel.value = String(val);
+      }
+      function fillWords() {
+        $('#words-input').value = S.words.map(w => w.term + ' = ' + w.hint).join('\n');
+        ensureOption($('#set-size'), S.settings.sessionSize);
+        ensureOption($('#set-new'), S.settings.newPerSession);
+        $('#set-strict').checked = S.settings.strict;
+        $('#set-hideto').checked = S.settings.hideTo;
+        replaceNext = S.sample;
+        $('#set-layout').value = S.settings.layout;
+        $('#list-count').textContent = plural(S.words.length, 'word') + ' saved';
+        $('#list-status').textContent = ''; $('#backup-status').textContent = '';
+        renderReset();
+      }
+      function saveList(force) {
+        const parsed = parseList($('#words-input').value);
+        const st = $('#list-status');
+        if (!parsed.entries.length) {
+          st.innerHTML = 'No valid lines found, so nothing was changed. Use the form <code>word = meaning</code>.';
+          return;
+        }
+        const m = mergeWords(S.words, parsed.entries);
+        if (m.removed > 0 && !force && !S.sample) {
+          st.innerHTML = plural(m.removed, 'word') + ' in your saved list ' + (m.removed === 1 ? 'is' : 'are') + ' missing from this text and would be removed with ' + (m.removed === 1 ? 'its' : 'their') + ' progress. '
+            + '<button class="btn sm danger" type="button" id="confirm-save">Save and remove</button>';
+          return;
+        }
+        abortSession();
+        S.words = m.words; S.sample = false; save();
+        let msg = 'Saved ' + plural(m.words.length, 'word') + ' (' + m.added + ' new' + (m.updated ? ', ' + m.updated + ' changed' : '') + (m.removed ? ', ' + m.removed + ' removed' : '') + ').';
+        if (parsed.skipped.length) {
+          msg += ' ' + plural(parsed.skipped.length, 'line') + ' skipped:<ul>' + parsed.skipped.slice(0, 6).map(s => '<li>line ' + s.line + ': ' + esc(s.reason) + '</li>').join('')
+            + (parsed.skipped.length > 6 ? '<li>and ' + (parsed.skipped.length - 6) + ' more</li>' : '') + '</ul>';
+        }
+        st.innerHTML = msg;
+        $('#list-count').textContent = plural(S.words.length, 'word') + ' saved';
+        renderHeader();
+      }
+      $('#save-list').addEventListener('click', () => saveList(false));
+      $('#list-status').addEventListener('click', e => { if (e.target.id === 'confirm-save') saveList(true); });
+      let replaceNext = false;
+      $('#file-in').addEventListener('change', e => {
+        const files = [...(e.target.files || [])];
+        e.target.value = '';
+        if (!files.length) return;
+        const read = f => new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = () => res(String(r.result || '').trim());
+          r.onerror = () => rej(f.name);
+          r.readAsText(f);
+        });
+        Promise.all(files.map(read)).then(texts => {
+          const base = replaceNext ? '' : $('#words-input').value.trim();
+          replaceNext = false;
+          $('#words-input').value = [base, ...texts].filter(Boolean).join('\n');
+          $('#list-status').textContent = 'Added ' + plural(files.length, 'file') + ' to the text. Check the list, then press Save list.';
+        }).catch(name => { $('#list-status').textContent = 'The file ' + name + ' could not be read.'; });
+      });
+
+      $('#set-size').addEventListener('change', e => { S.settings.sessionSize = Number(e.target.value); save(); });
+      $('#set-new').addEventListener('change', e => { S.settings.newPerSession = Number(e.target.value); save(); });
+      $('#set-strict').addEventListener('change', e => { S.settings.strict = e.target.checked; save(); });
+      $('#set-hideto').addEventListener('change', e => { S.settings.hideTo = e.target.checked; save(); });
+      $('#set-layout').addEventListener('change', e => { S.settings.layout = e.target.value; save(); });
+
+      function backupJSON() { return JSON.stringify({ app: 'lexigrid', v: 1, words: S.words, settings: S.settings, stats: S.stats, sample: S.sample }); }
+      $('#copy-backup').addEventListener('click', () => {
+        const ta = $('#backup-area'), st = $('#backup-status');
+        ta.value = backupJSON(); ta.focus(); ta.select();
+        const fallback = () => { st.textContent = 'Select the text above and copy it (Ctrl or Cmd + C).'; };
+        try {
+          navigator.clipboard.writeText(ta.value).then(() => { st.textContent = 'Backup copied. Paste it somewhere safe.'; }, fallback);
+        } catch (e) { fallback(); }
+      });
+      $('#restore-backup').addEventListener('click', () => {
+        const st = $('#backup-status');
+        try {
+          const o = JSON.parse($('#backup-area').value);
+          if (!o || !Array.isArray(o.words)) throw new Error('shape');
+          const next = sanitize(o);
+          if (!next.words.length) throw new Error('empty');
+          abortSession(); S = next; save(); fillWords(); renderHeader();
+          $('#backup-status').textContent = 'Restored ' + plural(S.words.length, 'word') + ' with their progress.';
+        } catch (e) { st.textContent = 'That is not a valid backup. Paste the full text from Copy backup.'; }
+      });
+      function renderReset() {
+        $('#reset-zone').innerHTML = pendingReset
+          ? '<span class="small">Erase every word and all progress?</span><button class="btn danger sm" type="button" data-r="yes">Yes, erase everything</button><button class="btn sm" type="button" data-r="no">Cancel</button>'
+          : '<button class="btn danger sm" type="button" data-r="ask">Reset all progress and words</button>';
+      }
+      $('#reset-zone').addEventListener('click', e => {
+        const r = e.target.dataset && e.target.dataset.r; if (!r) return;
+        if (r === 'ask') pendingReset = true;
+        else if (r === 'no') pendingReset = false;
+        else if (r === 'yes') {
+          pendingReset = false; abortSession();
+          S = sanitize({ words: [], sample: false }); S.stats.points = 0; save();
+          fillWords(); renderHeader();
+          $('#list-status').textContent = 'Everything was erased. Add words above to start again.';
+        }
+        renderReset();
+      });
+
+      /* ---------- progress tab ---------- */
+      const STAGES = [
+        { k: 'new', label: 'New', sub: 'unseen' }, { k: 'missed', label: 'Missed', sub: 'now' },
+        { k: 'box1', label: 'Box 1', sub: '1 day' }, { k: 'box2', label: 'Box 2', sub: '3 days' },
+        { k: 'box3', label: 'Box 3', sub: '1 week' }, { k: 'box4', label: 'Box 4', sub: '16 days' }, { k: 'box5', label: 'Box 5', sub: '5 weeks' }
+      ];
+      const stageLabel = k => (STAGES.find(s => s.k === k) || {}).label || k;
+      function renderProgress() {
+        const now = Date.now(), W = S.words;
+        const due = W.filter(w => isDue(w, now)).length;
+        const mastered = W.filter(w => w.tries > 0 && w.box === 5).length;
+        const tries = W.reduce((a, w) => a + w.tries, 0), wins = W.reduce((a, w) => a + w.wins, 0);
+        const items = [['Words', W.length], ['Due now', due], ['In Box 5', mastered], ['Right first look', tries ? Math.round(100 * wins / tries) + '%' : '–'],
+        ['Total points', S.stats.points.toLocaleString()], ['Best session', S.stats.best], ['Day streak', effStreak(S.stats, now)]];
+        $('#prog-stats').innerHTML = items.map(i => '<div><dt>' + i[0] + '</dt><dd>' + i[1] + '</dd></div>').join('');
+        const counts = {}; STAGES.forEach(s => counts[s.k] = 0);
+        W.forEach(w => { counts[stageOf(w)]++; });
+        const max = Math.max(1, ...Object.values(counts));
+        $('#stage-chart').innerHTML = STAGES.map(s => '<div class="stage" data-k="' + s.k + '"><span class="n">' + counts[s.k] + '</span>'
+          + '<div class="bar"><i style="--h:' + Math.round(100 * counts[s.k] / max) + '%"></i></div>'
+          + '<span class="lab">' + s.label + '</span><span class="int">' + s.sub + '</span></div>').join('');
+        renderWordList();
+        const h = S.stats.sessions;
+        $('#hist').innerHTML = h.length ? h.slice(0, 8).map(s => '<li><span>' + esc(new Date(s.t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })) + (s.cram ? ' · practice' : '')
+          + '</span><span class="tnum"><b>' + s.score + '</b> pts · ' + s.solved + '/' + s.total + ' solved</span></li>').join('')
+          : '<li class="empty">No sessions yet. Your first one will show up here.</li>';
+      }
+      function renderWordList() {
+        const now = Date.now(), q = $('#wf-q').value.trim().toLowerCase(), show = $('#wf-show').value;
+        const rows = S.words.filter(w => {
+          if (q && !(w.term.toLowerCase().includes(q) || w.hint.toLowerCase().includes(q))) return false;
+          const st = stageOf(w);
+          if (show === 'due') return isDue(w, now);
+          if (show === 'missed') return st === 'missed';
+          if (show === 'new') return st === 'new';
+          if (show === 'mastered') return st === 'box5';
+          return true;
+        });
+        $('#word-ul').innerHTML = rows.length ? rows.map(w => {
+          const st = stageOf(w);
+          const when = w.tries === 0 ? 'Not seen yet' : isDue(w, now) ? 'Due now' : 'Next ' + dueLabel(w.due, now);
+          return '<li><div class="l"><b>' + esc(w.term) + '</b><span>' + esc(w.hint) + '</span></div>'
+            + '<div class="r"><span class="pill" data-s="' + st + '">' + esc(stageLabel(st)) + '</span><small>' + esc(when) + (w.tries ? ' · ' + w.wins + '/' + w.tries + ' right' : '') + '</small></div></li>';
+        }).join('') : '<li class="empty">No words match.</li>';
+      }
+      $('#wf-q').addEventListener('input', renderWordList);
+      $('#wf-show').addEventListener('change', renderWordList);
+
+      setRoute();
+    })();
+  </script>
+
+</body>
+
+</html>
