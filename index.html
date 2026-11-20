@@ -88,6 +88,7 @@
           </p>
           <label class="fld" for="words-input">Words</label>
           <textarea id="words-input" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          <button class="btn" id="randomize" type="button" style="max-width: fit-content;">Randomize word order</button>
           <div class="actions">
             <button class="btn primary" id="save-list" type="button">Save list</button>
             <input type="file" id="file-in" class="sr" multiple accept=".txt,.csv,.tsv,text/plain,text/csv">
@@ -829,6 +830,33 @@
         $('#list-count').textContent = plural(S.words.length, 'word') + ' saved';
         renderHeader();
       }
+      function randomizeList() {
+        const parsed = parseList($('#words-input').value);
+        const st = $('#list-status');
+        if (!parsed.entries.length) {
+          return;
+        }
+        function shuffle(array) {
+          //   set the index to the arrays length
+          let i = array.length, j, temp;
+          //   create a loop that subtracts everytime it iterates through
+          while (--i > 0) {
+            //  create a random number and store it in a variable
+            j = Math.floor(Math.random() * (i + 1));
+            // create a temporary position from the item of the random number    
+            temp = array[j];
+            // swap the temp with the position of the last item in the array    
+            array[j] = array[i];
+            // swap the last item with the position of the random number 
+            array[i] = temp;
+          }
+        }
+        shuffle(parsed.entries);
+        $('#words-input').value = parsed.entries.map(e => `${e.term} = ${e.hint}`).join('\n');
+        saveList(false);
+        renderHeader();
+      }
+      $('#randomize').addEventListener('click', () => randomizeList());
       $('#save-list').addEventListener('click', () => saveList(false));
       $('#list-status').addEventListener('click', e => { if (e.target.id === 'confirm-save') saveList(true); });
       let replaceNext = false;
