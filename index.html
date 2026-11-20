@@ -58,7 +58,7 @@
           <div class="field"><label for="set-hideto">Leave “to” out of verbs<span class="d">“to commute” is played as “commute”, and a note under the meaning says it is a verb.</span></label>
             <input type="checkbox" id="set-hideto"></div>
           <div class="field"><label for="set-layout">On-screen keyboard</label>
-            <select id="set-layout"><option value="qwerty">QWERTY</option><option value="qwertz">QWERTZ</option></select></div>
+            <select id="set-layout"><option value="qwertz">QWERTZ</option><option value="qwerty">QWERTY</option></select></div>
         </div>
       </div>
 
@@ -246,7 +246,7 @@ function sanitize(o){
     tries:num(w.tries,0,0,1e6),wins:num(w.wins,0,0,1e6),lapses:num(w.lapses,0,0,1e6),last:num(w.last,0,0,8.64e15)
   }));
   const st=o.settings||{};
-  const settings={sessionSize:num(st.sessionSize,10,3,50),newPerSession:num(st.newPerSession,5,0,50),strict:st.strict!==false,hideTo:st.hideTo!==false,layout:st.layout==='qwertz'?'qwertz':'qwerty'};
+  const settings={sessionSize:num(st.sessionSize,10,3,50),newPerSession:num(st.newPerSession,5,0,50),strict:st.strict!==false,hideTo:st.hideTo!==false,layout:st.layout==='qwerty'?'qwerty':'qwertz'};
   const sx=o.stats||{};
   const stats={points:num(sx.points,0,0,1e9),best:num(sx.best,0,0,1e9),streak:num(sx.streak,0,0,1e5),lastDay:typeof sx.lastDay==='string'?sx.lastDay:'',
     sessions:Array.isArray(sx.sessions)?sx.sessions.filter(s=>s&&typeof s==='object').slice(0,30):[]};
